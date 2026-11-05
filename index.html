@@ -12,21 +12,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <!--
-    PHOTOS DE L'ACCUEIL
-    - assets/img/accueil-exterieur.jpg : la voiture vue de l'extérieur (paysage)
-    - assets/img/accueil-interieur.jpg : l'habitacle de la voiture
-    Pour changer le point vers lequel on « plonge » dans la voiture, modifiez
-    data-focus="60% 34%" ci-dessous (position horizontale puis verticale de l'habitacle sur la photo).
+    CINÉMATIQUE DE L'ACCUEIL (Shelby GT500)
+    - assets/img/gt500-exterieur.jpg : la voiture de profil (1920 × 1080)
+    - assets/img/gt500-portiere.jpg  : l'habitacle vu par la portière ouverte
+    - assets/img/gt500-interieur.jpg : le poste de conduite (fond du menu contact)
+    Si vous changez la photo extérieure, redessinez le contour de la porte
+    dans data-door (points x,y en pixels de la photo) et la charnière dans data-hinge.
   -->
-  <link rel="preload" as="image" href="assets/img/accueil-exterieur.jpg">
+  <link rel="preload" as="image" href="assets/img/gt500-exterieur.jpg">
 </head>
 <body class="page-home">
 
   <main id="contenu">
     <section class="ride" id="ride" aria-label="Accueil">
       <div class="ride-stage">
-        <img class="ride-layer ride-exterior" src="assets/img/accueil-exterieur.jpg" alt="Ford Thunderbird cabriolet de 1962" data-focus="60% 34%">
-        <img class="ride-layer ride-interior" src="assets/img/accueil-interieur.jpg" alt="Habitacle de la Ford Thunderbird 1962 : volant rouge et tableau de bord chromé" loading="eager">
+        <!-- La voiture : la porte est découpée dans la photo puis pivote sur sa charnière -->
+        <div class="scene" id="scene"
+             data-frame="1920 1080"
+             data-focus="0.45 0.6"
+             data-door="598,575 712,572 712,508 770,470 830,452 900,442 1000,442 1088,452 1060,560 1015,828 590,828 575,760 570,680 580,615"
+             data-hinge="580">
+          <img class="scene-ext" src="assets/img/gt500-exterieur.jpg" alt="Ford Shelby GT500 de 2007, rouge à bandes blanches, vue de profil">
+          <div class="scene-aperture" aria-hidden="true">
+            <img src="assets/img/gt500-portiere.jpg" alt="">
+            <span class="aperture-shade"></span>
+          </div>
+          <div class="scene-door" aria-hidden="true"></div>
+        </div>
+        <img class="ride-layer ride-through" src="assets/img/gt500-portiere.jpg" alt="" aria-hidden="true">
+        <img class="ride-layer ride-interior" src="assets/img/gt500-interieur.jpg" alt="Poste de conduite de la Shelby GT500 : volant, compteurs et levier de vitesses" loading="eager">
         <div class="ride-shade"></div>
 
         <!-- 1. Vue extérieure -->
@@ -38,7 +52,7 @@
             <div><a class="btn btn-solid" href="#a-bord" data-ride-jump>Nous contacter</a></div>
           </div>
           <a class="ride-hint" href="#a-bord" data-ride-jump>
-            <span>Faites défiler pour monter à bord</span>
+            <span>Faites défiler pour ouvrir la porte</span>
             <i aria-hidden="true"></i>
           </a>
         </div>

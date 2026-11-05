@@ -1,11 +1,21 @@
-/* Accueil : en faisant défiler la page, on « entre » dans la voiture.
-   Extérieur → zoom vers l'habitacle → intérieur → informations de contact. */
+/* Accueil : cinématique « on entre dans la voiture ».
+   En faisant défiler : on s'approche lentement de la Shelby GT500, la porte
+   s'ouvre sur sa charnière, on passe par la portière, on s'installe au poste
+   de conduite… et le menu contact apparaît. Le défilement est amorti pour
+   que le mouvement reste fluide, même avec une molette crantée. */
 (function () {
   "use strict";
 
   var ride = document.getElementById("ride");
   if (!ride) return;
-  var ext = ride.querySelector(".ride-exterior");
+  var stage = ride.querySelector(".ride-stage");
+  var scene = document.getElementById("scene");
+  var ext = scene.querySelector(".scene-ext");
+  var door = scene.querySelector(".scene-door");
+  var aperture = scene.querySelector(".scene-aperture");
+  var apImg = aperture.querySelector("img");
+  var apShade = aperture.querySelector(".aperture-shade");
+  var through = ride.querySelector(".ride-through");
   var int = ride.querySelector(".ride-interior");
   var shade = ride.querySelector(".ride-shade");
   var intro = ride.querySelector(".ride-intro");
@@ -14,16 +24,58 @@
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  // Point de la photo vers lequel on zoome (l'habitacle).
-  var focus = ext.getAttribute("data-focus") || "50% 50%";
-  ext.style.objectPosition = focus;
-  ext.style.transformOrigin = focus;
+  // ---------- Géométrie de la photo (en pixels de l'image d'origine) ----------
+  var frame = scene.dataset.frame.split(" ").map(Number);           // [1920, 1080]
+  var FW = frame[0], FH = frame[1];
+  var focus = scene.dataset.focus.split(" ").map(Number);           // point gardé au centre de l'écran
+  var pts = scene.dataset.door.trim().split(/\s+/).map(function (pair) { return pair.split(",").map(Number); });
+  var hingeX = Number(scene.dataset.hinge);
+  var xs = pts.map(function (q) { return q[0]; }), ys = pts.map(function (q) { return q[1]; });
+  var box = { x0: Math.min.apply(null, xs), x1: Math.max.apply(null, xs), y0: Math.min.apply(null, ys), y1: Math.max.apply(null, ys) };
+  box.cx = (box.x0 + box.x1) / 2; box.cy = (box.y0 + box.y1) / 2;
 
-  function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
-  function seg(p, a, b) { return clamp((p - a) / (b - a)); }               // progression entre a et b
-  function easeIn(t) { return t * t * t; }                                  // accélère en approchant
-  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+  // Contour de la porte en pourcentages (pour clip-path)
+  var poly = "polygon(" + pts.map(function (q) {
+    return (q[0] / FW * 100).toFixed(3) + "% " + (q[1] / FH * 100).toFixed(3) + "%";
+  }).join(", ") + ")";
+  door.style.clipPath = poly; door.style.webkitClipPath = poly;
+  aperture.style.clipPath = poly; aperture.style.webkitClipPath = poly;
+  door.style.backgroundImage = "url('" + ext.getAttribute("src") + "')";
+  door.style.transformOrigin = (hingeX / FW * 100) + "% " + (box.cy / FH * 100) + "%";
+  // L'habitacle visible par la porte occupe la zone de l'ouverture
+  apImg.style.left = (box.x0 / FW * 100) + "%";
+  apImg.style.top = (box.y0 / FH * 100) + "%";
+  apImg.style.width = ((box.x1 - box.x0) / FW * 100) + "%";
+  apImg.style.height = ((box.y1 - box.y0) / FH * 100) + "%";
+  ["left", "top", "width", "height"].forEach(function (k) { apShade.style[k] = apImg.style[k]; });
+
+  // ---------- Outils ----------
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function seg(p, a, b) { return clamp((p - a) / (b - a), 0, 1); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
   function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+  function easeInSine(t) { return 1 - Math.cos((t * Math.PI) / 2); }
+
+  // ---------- Mise en place de la scène (« cover » calculé à la main) ----------
+  var W, H, vw, vh, baseX, baseY;
+  function layout() {
+    vw = stage.clientWidth;
+    vh = reduced.matches ? window.innerHeight : stage.clientHeight;
+    // Écran en hauteur (téléphone) : on montre la voiture entière, centrée,
+    // bords fondus dans le noir. Écran large : la photo couvre tout l'écran.
+    var portrait = vw / vh < 1.1;
+    scene.classList.toggle("is-portrait", portrait);
+    var sc = portrait ? vw / (FW * 0.62) : Math.max(vw / FW, vh / FH);
+    W = FW * sc; H = FH * sc;
+    baseX = clamp(vw / 2 - focus[0] * W, vw - W, 0);
+    baseY = portrait ? vh * 0.4 - focus[1] * H : clamp(vh / 2 - focus[1] * H, vh - H, 0);
+    scene.style.width = W + "px";
+    scene.style.height = H + "px";
+    scene.style.perspective = (W * 0.75).toFixed(0) + "px";
+    scene.style.perspectiveOrigin = (box.cx / FW * 100) + "% " + (box.cy / FH * 100) + "%";
+    door.style.backgroundSize = W + "px " + H + "px";
+  }
 
   var cabinActive = null;
   function setCabin(active) {
@@ -34,72 +86,107 @@
     if (active) cabin.removeAttribute("inert"); else cabin.setAttribute("inert", "");
   }
 
-  function progress() {
-    var rect = ride.getBoundingClientRect();
+  function target() {
     var total = ride.offsetHeight - window.innerHeight;
-    return total > 0 ? clamp(-rect.top / total) : 1;
+    return total > 0 ? clamp(-ride.getBoundingClientRect().top / total, 0, 1) : 1;
   }
 
-  function render() {
-    ticking = false;
-    if (reduced.matches) {
-      [ext, int, shade, intro, cabin].forEach(function (el) { el.removeAttribute("style"); });
-      ext.style.objectPosition = focus;
-      setCabin(true);
-      return;
-    }
-    var p = progress();
-
-    // 1. Zoom vers l'habitacle (accélère à l'approche)
-    var zoom = easeIn(seg(p, 0.04, 0.6));
-    ext.style.transform = "scale(" + (1 + zoom * 5.5).toFixed(4) + ")";
-    ext.style.opacity = (1 - seg(p, 0.46, 0.62)).toFixed(3);
-
-    // 2. L'intérieur apparaît puis se pose
-    var inT = seg(p, 0.46, 0.64);
-    int.style.opacity = inT.toFixed(3);
-    int.style.transform = "scale(" + (1.45 - 0.45 * easeOut(seg(p, 0.46, 0.9))).toFixed(4) + ")";
-
-    // Assombrissement : léger au départ, plus marqué pendant le passage, puis ambiance intérieure
-    var pass = Math.sin(Math.PI * seg(p, 0.36, 0.7));
-    shade.style.opacity = (0.35 + 0.55 * pass + 0.2 * seg(p, 0.7, 0.85)).toFixed(3);
-
-    // Titre d'accueil : s'efface dès le début du défilement
-    var out = easeInOut(seg(p, 0.02, 0.2));
+  // ---------- Rendu d'une image de la cinématique ----------
+  function draw(p) {
+    // 1. Le titre s'efface doucement
+    var out = easeInOut(seg(p, 0.02, 0.14));
     intro.style.opacity = (1 - out).toFixed(3);
-    intro.style.transform = "translateY(" + (-48 * out).toFixed(1) + "px)";
+    intro.style.transform = "translate3d(0," + (-40 * out).toFixed(1) + "px,0)";
     intro.style.visibility = out >= 1 ? "hidden" : "visible";
 
-    // Carte de contact
-    var c = easeOut(seg(p, 0.7, 0.86));
+    // 2. Caméra : approche lente (travelling), puis on plonge dans l'ouverture
+    var approach = easeInOut(seg(p, 0.03, 0.34));
+    var dive = easeInSine(seg(p, 0.44, 0.7));
+    var apW = (box.x1 - box.x0) / FW * W, apH = (box.y1 - box.y0) / FH * H;
+    var kFill = Math.max(vw / apW, vh / apH) * 1.12;          // l'ouverture remplit l'écran
+    var k = lerp(1, 1.45, approach);
+    k = k * Math.pow(kFill / k, dive);                          // zoom exponentiel = vitesse perçue constante
+    var ax = box.cx / FW * W, ay = box.cy / FH * H;             // centre de l'ouverture dans la scène
+    var m = Math.max(0.45 * approach, dive > 0 ? lerp(0.45, 1, Math.pow(dive, 0.6)) : 0);
+    var sx = lerp(baseX + ax, vw / 2, m), sy = lerp(baseY + ay, vh / 2, m);
+    var tx = sx - k * ax, ty = sy - k * ay;
+    // Pas de bord vide à l'écran quand la photo est plus grande que lui
+    if (k * W >= vw) tx = clamp(tx, vw - k * W, 0);
+    if (k * H >= vh) ty = clamp(ty, vh - k * H, 0);
+    scene.style.transform = "translate3d(" + tx.toFixed(2) + "px," + ty.toFixed(2) + "px,0) scale(" + k.toFixed(4) + ")";
+
+    // 3. La porte s'ouvre sur sa charnière, vers nous
+    var open = easeInOut(seg(p, 0.2, 0.47));
+    door.style.transform = "rotateY(" + (-74 * open).toFixed(2) + "deg)";
+    door.style.filter = "brightness(" + (1 - 0.5 * open).toFixed(3) + ")";
+    door.style.opacity = (1 - seg(p, 0.5, 0.6)).toFixed(3);
+    apShade.style.opacity = (1 - 0.7 * dive).toFixed(3);
+    ext.style.opacity = (1 - seg(p, 0.6, 0.68)).toFixed(3);
+
+    // 4. On passe la portière : l'habitacle vu de la porte prend tout l'écran…
+    var inT = seg(p, 0.62, 0.69);
+    through.style.opacity = (inT * (1 - seg(p, 0.76, 0.85))).toFixed(3);
+    through.style.transform = "scale(" + lerp(1.1, 1, easeOut(seg(p, 0.62, 0.84))).toFixed(4) + ")";
+
+    // 5. … puis on s'installe au volant
+    var seat = seg(p, 0.76, 0.85);
+    int.style.opacity = seat.toFixed(3);
+    int.style.transform = "scale(" + lerp(1.14, 1, easeOut(seg(p, 0.76, 0.95))).toFixed(4) + ")";
+
+    // Lumière : on passe de l'extérieur à l'ambiance feutrée de l'habitacle
+    var pass = Math.sin(Math.PI * seg(p, 0.52, 0.74));
+    shade.style.opacity = (0.3 + 0.35 * pass + 0.35 * seg(p, 0.78, 0.9)).toFixed(3);
+
+    // 6. Le menu contact apparaît
+    var c = easeOut(seg(p, 0.86, 0.95));
     cabin.style.opacity = c.toFixed(3);
-    cabin.style.transform = "translateY(" + (40 * (1 - c)).toFixed(1) + "px)";
+    cabin.style.transform = "translate3d(0," + (36 * (1 - c)).toFixed(1) + "px,0)";
     setCabin(c > 0.5);
 
     if (bar) bar.style.transform = "scaleY(" + p.toFixed(4) + ")";
   }
 
-  var ticking = false;
-  function onScroll() {
-    if (!ticking) { ticking = true; requestAnimationFrame(render); }
+  function drawStatic() {
+    [door, ext, through, int, shade, intro, cabin].forEach(function (el) { el.style.transform = ""; el.style.opacity = ""; });
+    scene.style.transform = "translate3d(" + baseX + "px," + baseY + "px,0)";
+    door.style.filter = "";
+    intro.style.visibility = "";
+    setCabin(true);
   }
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-  reduced.addEventListener("change", onScroll);
-  render();
 
-  // Boutons « Nous contacter » : défilement doux jusqu'à l'intérieur de la voiture.
+  // ---------- Défilement amorti (inertie) ----------
+  var current = target(), goal = current, running = false;
+  function loop() {
+    if (reduced.matches) { running = false; drawStatic(); return; }
+    var diff = goal - current;
+    current = Math.abs(diff) < 0.0004 ? goal : current + diff * 0.09;
+    draw(current);
+    if (current !== goal) requestAnimationFrame(loop);
+    else running = false;
+  }
+  function kick() {
+    goal = target();
+    if (!running) { running = true; requestAnimationFrame(loop); }
+  }
+
+  layout();
+  if (reduced.matches) drawStatic(); else draw(current);
+  window.addEventListener("scroll", kick, { passive: true });
+  window.addEventListener("resize", function () { layout(); if (reduced.matches) drawStatic(); else draw(current); kick(); });
+  reduced.addEventListener("change", function () { layout(); if (reduced.matches) drawStatic(); else draw(current); });
+
+  // Boutons « Nous contacter » : on monte à bord en douceur jusqu'au menu contact.
   document.querySelectorAll("[data-ride-jump]").forEach(function (a) {
     a.addEventListener("click", function (e) {
       e.preventDefault();
-      var target = reduced.matches
+      var dest = reduced.matches
         ? cabin.getBoundingClientRect().top + window.scrollY - 80
-        : ride.offsetTop + (ride.offsetHeight - window.innerHeight) * 0.9;
-      window.scrollTo({ top: target, behavior: reduced.matches ? "auto" : "smooth" });
+        : ride.offsetTop + (ride.offsetHeight - window.innerHeight) * 0.97;
+      window.scrollTo({ top: dest, behavior: reduced.matches ? "auto" : "smooth" });
       setTimeout(function () {
         var first = document.getElementById("c-nom");
         if (first) first.focus({ preventScroll: true });
-      }, reduced.matches ? 50 : 1400);
+      }, reduced.matches ? 50 : 2200);
     });
   });
 

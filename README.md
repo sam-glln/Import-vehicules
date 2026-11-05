@@ -24,7 +24,7 @@ js/inventaire.js         Affichage de l'inventaire
 js/contact.js            Formulaire de la page Contact
 css/style.css            Styles (couleurs en haut du fichier)
 css/admin.css            Styles de l'espace propriétaire
-assets/img/              Photos (accueil-exterieur.jpg et accueil-interieur.jpg = page d'accueil)
+assets/img/              Photos (gt500-*.jpg = cinématique de la page d'accueil)
 assets/img/vehicules/    Photos des véhicules
 ```
 
@@ -212,7 +212,12 @@ Modifiez le texte entre les balises, puis mettez à jour la phrase « Informatio
 ## Remplacer les photos
 
 - **Logo** : `assets/img/logo.svg` (version vectorielle de votre logo « AM », affichée en blanc dans l'en-tête et le pied de page) et `assets/img/favicon.svg` (icône de l'onglet). L'original fourni est conservé dans `assets/img/logo-original.png`. Pour changer de logo, remplacez `logo.svg` par un SVG noir sur fond transparent : il prend automatiquement la couleur du site.
-- **Page d'accueil** : deux photos de la même voiture, `assets/img/accueil-exterieur.jpg` (vue extérieure, paysage) et `assets/img/accueil-interieur.jpg` (habitacle). En faisant défiler, la page zoome vers l'habitacle de la photo extérieure puis passe à l'intérieur. Si vous changez de photo, réglez le point de zoom dans `index.html` avec `data-focus="60% 34%"` : position horizontale puis verticale de l'habitacle sur la photo (0 % = gauche/haut, 100 % = droite/bas). Une voiture décapotable ou vue de trois quarts avant donne le meilleur effet.
+- **Page d'accueil (cinématique)** : en faisant défiler, on s'approche de la Shelby GT500, la porte s'ouvre, on entre par la portière et on s'installe au volant, où apparaît le menu contact. Trois photos :
+  - `assets/img/gt500-exterieur.jpg` : la voiture **de profil**, 1920 × 1080 ;
+  - `assets/img/gt500-portiere.jpg` : l'habitacle vu par la portière ouverte ;
+  - `assets/img/gt500-interieur.jpg` : le poste de conduite (fond du menu contact).
+
+  Les deux photos intérieures se remplacent librement. Si vous changez la photo extérieure, il faut redessiner la porte dans `index.html` : `data-door` liste les points du contour de la porte (x,y en pixels de la photo, fenêtre comprise) et `data-hinge` la position x de la charnière (bord avant de la porte). `data-focus` indique le point de la photo gardé au centre de l'écran.
 - **Photos des pages d'import** : dans `import-canada.html` / `import-etats-unis.html`, modifiez le chemin dans `<div class="page-hero-media" style="background-image: url('…')">`.
 - **Photos des véhicules** : voir plus haut.
 

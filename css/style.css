@@ -1202,3 +1202,44 @@ a:hover > .link-arrow::after, .link-arrow:hover::after { transform: translateX(6
 .footer-brand .brand { display: inline-flex; }
 .ride-intro h1 { font-size: clamp(1.7rem, 3.8vw, 2.9rem); }
 .ride-intro p { max-width: 32rem; }
+
+/* =========================================================
+   Accueil : cinématique Shelby GT500 (porte qui s'ouvre)
+   ========================================================= */
+.ride { height: 560vh; }
+@media (max-width: 899px) { .ride { height: 480vh; } }
+.scene {
+  position: absolute; left: 0; top: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  background: #0a0a0a;
+}
+.scene-ext { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; display: block; }
+.scene-aperture { position: absolute; inset: 0; background: #050505; }
+.scene-aperture img { position: absolute; max-width: none; object-fit: cover; }
+.aperture-shade {
+  position: absolute;
+  background:
+    radial-gradient(ellipse 70% 75% at 55% 55%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.85) 100%),
+    linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 22%);
+}
+.scene-door {
+  position: absolute; inset: 0;
+  background-repeat: no-repeat; background-position: 0 0;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+.ride-through { opacity: 0; object-position: 50% 55%; }
+.ride-interior { object-position: 50% 45%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ride-stage { overflow-x: clip; }
+  .ride-stage::before { content: ""; display: block; height: 100vh; height: 100svh; }
+  .scene { position: absolute; }
+  .scene-door, .scene-aperture, .ride-through { display: none; }
+}
+.scene.is-portrait .scene-ext {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+}
+.scene.is-portrait { background: transparent; }
