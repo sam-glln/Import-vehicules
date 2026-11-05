@@ -811,146 +811,6 @@ p { margin: 0 0 1em; }
 .social-list a:hover .social-arrow { color: var(--accent); transform: translate(2px, -2px); }
 
 /* =========================================================
-   Accueil animé : on « monte à bord » en faisant défiler
-   ========================================================= */
-.ride {
-  position: relative;
-  height: 440vh;
-  background: var(--bg);
-}
-.ride-stage {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-  isolation: isolate;
-}
-.ride-layer {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  max-width: none;
-  object-fit: cover;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-}
-.ride-interior { opacity: 0; object-position: 50% 55%; }
-.ride-shade {
-  position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 75% 70% at 50% 45%, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.8) 100%),
-    linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0) 30%, rgba(10,10,10,0.35) 70%, rgba(10,10,10,0.9) 100%);
-  opacity: 0.35;
-}
-
-.ride-intro {
-  position: absolute; inset: 0;
-  display: flex; align-items: flex-end;
-  padding-bottom: clamp(72px, 13vh, 130px);
-  background: linear-gradient(90deg, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.15) 65%), linear-gradient(0deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0) 55%);
-}
-.ride-intro h1 { font-size: clamp(2.6rem, 8vw, 5.6rem); max-width: 13ch; margin-bottom: 1.5rem; }
-.ride-intro h1 em { font-style: italic; color: var(--accent); }
-.ride-intro p {
-  max-width: 34rem;
-  font-size: clamp(1rem, 2.2vw, 1.15rem);
-  color: rgba(243, 240, 234, 0.85);
-  margin-bottom: 2.4rem;
-}
-.ride-hint {
-  position: absolute; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px));
-  transform: translateX(-50%);
-  display: none; flex-direction: column; align-items: center; gap: 0.7rem;
-  font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted);
-}
-.ride-hint i {
-  width: 1px; height: 44px; background: var(--line-strong); position: relative; overflow: hidden;
-}
-.ride-hint i::after {
-  content: ""; position: absolute; left: 0; top: -40%; width: 1px; height: 40%;
-  background: var(--accent);
-  animation: hint-drop 2.2s var(--ease) infinite;
-}
-@keyframes hint-drop { to { top: 100%; } }
-@media (min-width: 900px) { .ride-hint { display: flex; } }
-
-.ride-cabin {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-  padding: calc(var(--header-h) + env(safe-area-inset-top, 0px) + 12px) 16px calc(16px + env(safe-area-inset-bottom, 0px));
-  opacity: 0;
-}
-.cabin-card {
-  width: min(1080px, 100%);
-  max-height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  display: grid; gap: 1.6rem;
-  padding: clamp(1.4rem, 4vw, 3rem);
-  background: rgba(10, 10, 10, 0.74);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
-  backdrop-filter: blur(18px) saturate(1.15);
-  border: 1px solid var(--line);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-}
-@media (min-width: 900px) {
-  .cabin-card { grid-template-columns: 1fr 1.05fr; gap: 3.5rem; align-items: start; }
-}
-.cabin-info .eyebrow { margin-bottom: 1rem; }
-.cabin-info h2 { font-size: clamp(1.8rem, 4.2vw, 2.9rem); margin-bottom: 1rem; }
-.cabin-info h2 em { color: var(--accent); }
-.cabin-info p { color: var(--muted); margin-bottom: 1.4rem; }
-.cabin-lines { list-style: none; padding: 0; margin: 0 0 1.2rem; display: grid; gap: 0.8rem; }
-.cabin-lines .lbl {
-  display: block; font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint);
-}
-.cabin-lines a:hover { color: var(--accent); }
-.cabin-social { margin-top: 0; }
-.cabin-social .social-list { display: flex; flex-wrap: wrap; gap: 0.5rem; border: 0; }
-.cabin-social .social-list a {
-  min-height: 42px; padding: 0.4rem 0.9rem; gap: 0.55rem;
-  border: 1px solid var(--line); font-size: 0.88rem;
-}
-.cabin-social .social-list a:hover { border-color: var(--accent); }
-.cabin-social .social-detail, .cabin-social .social-arrow { display: none; }
-.cabin-social .social-icon { width: 18px; height: 18px; }
-
-.cabin-form { display: grid; gap: 1.1rem; }
-.cabin-form .field input, .cabin-form .field textarea { padding: 0.55rem 0; }
-.cabin-form textarea { min-height: 84px; }
-.cabin-form .btn { justify-self: start; }
-
-@media (max-width: 899px) {
-  .ride { height: 400vh; }
-  .cabin-info p { display: none; }
-  .cabin-info h2 br { display: none; }
-}
-
-.ride-progress {
-  position: absolute; right: max(16px, calc(var(--gutter) / 2)); top: 50%;
-  width: 1px; height: 96px; margin-top: -48px;
-  background: var(--line);
-}
-.ride-progress span {
-  position: absolute; inset: 0; background: var(--accent);
-  transform: scaleY(0); transform-origin: top;
-}
-
-/* Animations réduites : la page se lit comme deux sections classiques */
-@media (prefers-reduced-motion: reduce) {
-  .ride { height: auto; }
-  .ride-stage { position: relative; height: auto; overflow: visible; }
-  .ride-exterior { position: relative; height: 100vh; height: 100svh; }
-  .ride-intro { bottom: auto; height: 100vh; height: 100svh; }
-  .ride-interior, .ride-shade { top: 100vh; top: 100svh; height: auto; bottom: 0; }
-  .ride-interior { opacity: 1; }
-  .ride-shade { opacity: 0.75; }
-  .ride-cabin { position: relative; opacity: 1; padding-block: 18vh; }
-  .cabin-card { max-height: none; }
-  .ride-hint, .ride-progress { display: none; }
-}
-
-/* =========================================================
    Inventaire : demande d'information dans la fiche
    ========================================================= */
 .info-request { margin-top: 0.5rem; }
@@ -966,15 +826,6 @@ p { margin: 0 0 1em; }
   font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
 }
 .link-btn:hover { color: var(--text); }
-@media (max-width: 899px) {
-  .ride-progress { display: none; }
-  .cabin-card { gap: 1.2rem; }
-  .cabin-info h2 { margin-bottom: 0.8rem; }
-  .cabin-lines { grid-template-columns: 1fr 1fr; gap: 0.8rem 1rem; }
-  .cabin-lines a { font-size: 0.88rem; word-break: break-word; }
-  .cabin-form { gap: 0.9rem; }
-  .cabin-form .field label { margin-bottom: 0.2rem; }
-}
 
 /* =========================================================
    REFONTE — esprit « constructeur » : capitales larges,
@@ -1076,11 +927,6 @@ a:hover > .link-arrow::after, .link-arrow:hover::after { transform: translateX(6
 .round-btn:hover:not(:disabled) { border-color: var(--text); background: var(--text); color: var(--bg); }
 .round-btn:disabled { opacity: 0.25; cursor: default; }
 
-/* ---------- Accueil : titre et carte à bord ---------- */
-.ride-intro h1 { font-size: clamp(1.9rem, 7vw, 5.4rem); max-width: 15ch; }
-.ride-intro h1 em, .cabin-info h2 em { font-style: normal; }
-.cabin-info h2 { font-size: clamp(1.5rem, 3.4vw, 2.4rem); line-height: 1.02; }
-
 /* ---------- Accueil : la collection (carrousel) ---------- */
 .showcase { padding-block: clamp(88px, 13vw, 170px) clamp(72px, 9vw, 120px); overflow: hidden; }
 .showcase-head {
@@ -1168,7 +1014,6 @@ a:hover > .link-arrow::after, .link-arrow:hover::after { transform: translateX(6
   .step h3 { grid-column: 2; grid-row: 1; }
   .step-body { grid-column: 3; grid-row: 1; }
 }
-.ride-intro h1 { font-size: clamp(1.9rem, 6.2vw, 4.8rem); }
 @media (max-width: 699px) {
   .show-card { flex-basis: 82vw; }
   .show-body { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
@@ -1196,50 +1041,119 @@ a:hover > .link-arrow::after, .link-arrow:hover::after { transform: translateX(6
   .site-header .brand-name { font-size: 0.86rem; letter-spacing: 0.1em; }
 }
 
-/* Accueil : titre plus court et plus discret */
-.ride-intro h1 { font-size: clamp(1.7rem, 4.4vw, 3.3rem); max-width: none; margin-bottom: 1.1rem; }
-.ride-intro p { font-size: 1rem; max-width: 26rem; margin-bottom: 2rem; }
 .footer-brand .brand { display: inline-flex; }
-.ride-intro h1 { font-size: clamp(1.7rem, 3.8vw, 2.9rem); }
-.ride-intro p { max-width: 32rem; }
 
 /* =========================================================
-   Accueil : cinématique Shelby GT500 (porte qui s'ouvre)
+   Accueil : diaporama plein écran (3 photos, une toutes les 4 s)
+   Les photos et leurs légendes se modifient dans index.html.
    ========================================================= */
-.ride { height: 560vh; }
-@media (max-width: 899px) { .ride { height: 480vh; } }
-.scene {
-  position: absolute; left: 0; top: 0;
-  transform-origin: 0 0;
-  will-change: transform;
-  background: #0a0a0a;
+.hero-slides {
+  position: relative; isolation: isolate; overflow: hidden;
+  height: 100vh; height: 100svh; min-height: 560px;
+  background: var(--bg);
 }
-.scene-ext { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; display: block; }
-.scene-aperture { position: absolute; inset: 0; background: #050505; }
-.scene-aperture img { position: absolute; max-width: none; object-fit: cover; }
-.aperture-shade {
-  position: absolute;
+.slides { position: absolute; inset: 0; z-index: -2; margin: 0; padding: 0; list-style: none; }
+.slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
+.slide.is-active { opacity: 1; }
+.slide img {
+  width: 100%; height: 100%; max-width: none; object-fit: cover;
+  transform: scale(1.1);
+  transition: transform 0s linear 1.4s;          /* se réinitialise une fois effacée */
+}
+.slide.is-active img { transform: scale(1); transition: transform 6.5s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.hero-shade {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 75% at 55% 55%, rgba(0,0,0,0) 35%, rgba(0,0,0,0.85) 100%),
-    linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 22%);
+    linear-gradient(90deg, rgba(10,10,10,0.72) 0%, rgba(10,10,10,0.12) 62%),
+    linear-gradient(0deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0) 55%),
+    linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0) 22%);
 }
-.scene-door {
-  position: absolute; inset: 0;
-  background-repeat: no-repeat; background-position: 0 0;
-  will-change: transform;
-  backface-visibility: hidden;
-}
-.ride-through { opacity: 0; object-position: 50% 55%; }
-.ride-interior { object-position: 50% 45%; }
+.hero-content { position: absolute; left: 0; right: 0; bottom: clamp(110px, 18vh, 180px); }
+.hero-content h1 { font-size: clamp(1.7rem, 3.8vw, 2.9rem); margin-bottom: 1.1rem; }
+.hero-content h1 em { font-style: normal; }
+.hero-content p { font-size: 1rem; max-width: 32rem; color: rgba(243, 240, 234, 0.85); margin-bottom: 2rem; }
 
+.slides-ui {
+  position: absolute; left: 0; right: 0;
+  bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; gap: 1rem 1.4rem;
+}
+.slides-caption {
+  display: flex; align-items: baseline; gap: 0.9rem; min-width: 0; margin-right: auto;
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.slides-count { color: var(--accent); font-weight: 600; }
+.slides-name { font-weight: 600; font-stretch: 110%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.4s var(--ease); }
+.slides-bars { display: flex; gap: 8px; }
+.slides-bar { position: relative; width: clamp(34px, 6vw, 72px); height: 24px; padding: 0; border: 0; background: none; cursor: pointer; }
+.slides-bar::before, .slides-bar span {
+  content: ""; position: absolute; left: 0; top: 50%; height: 2px; margin-top: -1px;
+}
+.slides-bar::before { right: 0; background: rgba(255, 255, 255, 0.28); transition: background 0.3s; }
+.slides-bar:hover::before { background: rgba(255, 255, 255, 0.5); }
+.slides-bar span { width: 0; background: var(--text); }
+.slides-bar.is-active span { animation: slide-fill var(--slide-duration, 4s) linear forwards; }
+.hero-slides.is-paused .slides-bar.is-active span { animation-play-state: paused; }
+@keyframes slide-fill { from { width: 0; } to { width: 100%; } }
+.slides-pause {
+  width: 34px; height: 34px; flex: none;
+  display: grid; place-items: center;
+  border: 1px solid var(--line-strong); border-radius: 50%;
+  background: none; cursor: pointer; color: var(--text);
+  transition: border-color 0.3s, background 0.3s, color 0.3s;
+}
+.slides-pause:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.slides-pause svg { width: 10px; height: 10px; }
+@media (max-width: 599px) { .slides-count { display: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .ride-stage { overflow-x: clip; }
-  .ride-stage::before { content: ""; display: block; height: 100vh; height: 100svh; }
-  .scene { position: absolute; }
-  .scene-door, .scene-aperture, .ride-through { display: none; }
+  .slide img, .slide.is-active img { transform: none; transition: none; }
+  .slide { transition-duration: 0.5s; }
 }
-.scene.is-portrait .scene-ext {
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+
+/* ---------- Section contact « Prenez place » ---------- */
+.contact-ride {
+  position: relative; isolation: isolate; overflow: hidden;
+  padding: clamp(90px, 13vw, 170px) 16px;
+  display: grid; place-items: center;
+  scroll-margin-top: 0;
 }
-.scene.is-portrait { background: transparent; }
+.contact-ride > img {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 50% 45%;
+}
+.contact-ride::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(10, 10, 10, 0.5); }
+.cabin-card {
+  width: min(1080px, 100%);
+  display: grid; gap: 1.6rem;
+  padding: clamp(1.4rem, 4vw, 3rem);
+  background: rgba(10, 10, 10, 0.74);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+@media (min-width: 900px) { .cabin-card { grid-template-columns: 1fr 1.05fr; gap: 3.5rem; align-items: start; } }
+.cabin-info .eyebrow { margin-bottom: 1rem; }
+.cabin-info h2 { font-size: clamp(1.5rem, 3.4vw, 2.4rem); line-height: 1.02; margin-bottom: 1rem; }
+.cabin-info h2 em { color: var(--accent); font-style: normal; }
+.cabin-info p { color: var(--muted); margin-bottom: 1.4rem; }
+.cabin-lines { list-style: none; padding: 0; margin: 0 0 1.2rem; display: grid; gap: 0.8rem; }
+.cabin-lines .lbl { display: block; font-size: 0.64rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
+.cabin-lines a:hover { color: var(--accent); }
+.cabin-social { margin-top: 0; }
+.cabin-social .social-list { display: flex; flex-wrap: wrap; gap: 0.5rem; border: 0; }
+.cabin-social .social-list a { min-height: 42px; padding: 0.4rem 0.9rem; gap: 0.55rem; border: 1px solid var(--line); font-size: 0.88rem; }
+.cabin-social .social-list a:hover { border-color: var(--accent); }
+.cabin-social .social-detail, .cabin-social .social-arrow { display: none; }
+.cabin-social .social-icon { width: 18px; height: 18px; }
+.cabin-form { display: grid; gap: 1.1rem; }
+.cabin-form .field input, .cabin-form .field textarea { padding: 0.55rem 0; }
+.cabin-form textarea { min-height: 84px; }
+.cabin-form .btn { justify-self: start; }
+@media (max-width: 899px) {
+  .cabin-lines { grid-template-columns: 1fr 1fr; gap: 0.8rem 1rem; }
+  .cabin-lines a { font-size: 0.88rem; word-break: break-word; }
+}
+.hero-content { bottom: clamp(92px, 12vh, 136px); }
+.hero-content h1, .hero-content p { text-shadow: 0 2px 28px rgba(0, 0, 0, 0.45); }
+@media (max-width: 599px) { .slides-name { white-space: normal; } }

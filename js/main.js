@@ -222,7 +222,7 @@
   }
 
   // Titres découpés en mots qui montent l'un après l'autre (effet « rideau »).
-  var SPLIT_SELECTOR = ".page-hero h1, .section-title, .cta-band h2, .callout h2, .ride-intro h1, [data-split]";
+  var SPLIT_SELECTOR = ".page-hero h1, .section-title, .cta-band h2, .callout h2, .hero-content h1, [data-split]";
   function splitWords(el) {
     if (el.dataset.splitDone) return;
     el.dataset.splitDone = "1";

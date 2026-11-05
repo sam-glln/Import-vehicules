@@ -24,7 +24,7 @@ js/inventaire.js         Affichage de l'inventaire
 js/contact.js            Formulaire de la page Contact
 css/style.css            Styles (couleurs en haut du fichier)
 css/admin.css            Styles de l'espace propriétaire
-assets/img/              Photos (gt500-*.jpg = cinématique de la page d'accueil)
+assets/img/              Photos (accueil-*.jpg = diaporama de la page d'accueil)
 assets/img/vehicules/    Photos des véhicules
 ```
 
@@ -212,12 +212,8 @@ Modifiez le texte entre les balises, puis mettez à jour la phrase « Informatio
 ## Remplacer les photos
 
 - **Logo** : `assets/img/logo.svg` (version vectorielle de votre logo « AM », affichée en blanc dans l'en-tête et le pied de page) et `assets/img/favicon.svg` (icône de l'onglet). L'original fourni est conservé dans `assets/img/logo-original.png`. Pour changer de logo, remplacez `logo.svg` par un SVG noir sur fond transparent : il prend automatiquement la couleur du site.
-- **Page d'accueil (cinématique)** : en faisant défiler, on s'approche de la Shelby GT500, la porte s'ouvre, on entre par la portière et on s'installe au volant, où apparaît le menu contact. Trois photos :
-  - `assets/img/gt500-exterieur.jpg` : la voiture **de profil**, 1920 × 1080 ;
-  - `assets/img/gt500-portiere.jpg` : l'habitacle vu par la portière ouverte ;
-  - `assets/img/gt500-interieur.jpg` : le poste de conduite (fond du menu contact).
-
-  Les deux photos intérieures se remplacent librement. Si vous changez la photo extérieure, il faut redessiner la porte dans `index.html` : `data-door` liste les points du contour de la porte (x,y en pixels de la photo, fenêtre comprise) et `data-hinge` la position x de la charnière (bord avant de la porte). `data-focus` indique le point de la photo gardé au centre de l'écran.
+- **Page d'accueil (diaporama)** : trois photos en plein écran qui défilent toutes les 4 secondes, avec un léger zoom, une légende et des barres de progression cliquables (bouton pause à droite). Fichiers : `assets/img/accueil-gt40.jpg`, `accueil-cobra.jpg`, `accueil-bronco.jpg` (format paysage, 1920 px de large conseillé). Pour changer une photo, remplacez le fichier sous le même nom, ou modifiez dans `index.html` la liste `<ul class="slides">` : `src` (fichier), `alt` (description), `data-caption` (légende affichée) et `object-position` (cadrage). On peut ajouter ou retirer des photos ; la durée se règle avec `data-duration="4000"` (en millisecondes).
+- **Fond de la section contact de l'accueil** : `assets/img/gt500-interieur.jpg`.
 - **Photos des pages d'import** : dans `import-canada.html` / `import-etats-unis.html`, modifiez le chemin dans `<div class="page-hero-media" style="background-image: url('…')">`.
 - **Photos des véhicules** : voir plus haut.
 
