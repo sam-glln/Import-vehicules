@@ -37,13 +37,13 @@ Ouvrez `js/config.js` et modifiez :
 - `supabase` : votre dossier des demandes (voir « Dossier des demandes »).
 - `formspreeId` : facultatif, pour recevoir aussi chaque demande par e-mail (voir ci-dessous).
 - `reseaux` et `whatsapp` : vos réseaux sociaux et votre numéro WhatsApp (voir ci-dessous).
-- `github` : le dépôt GitHub du site, utilisé par l'espace propriétaire (déjà réglé sur `sam-glln/Import-vehicules`).
+- `github` : le dépôt GitHub du site, utilisé par l'espace propriétaire (déjà réglé sur `atlantic-motors/atlantic-motors.github.io`).
 
 > Astuce : le nom « Atlantic Motors » figure aussi en dur dans la balise `<title>` de chaque page (il y est remplacé à l'affichage). Pour le référencement, faites un « Rechercher / Remplacer » de `Atlantic Motors` dans tout le dossier avec votre éditeur (VS Code : `Cmd + Maj + H`).
 
 ## Se connecter à mon espace
 
-Ouvrez `admin.html` : `http://localhost:8000/admin.html` sur votre ordinateur, ou `https://VOTRE-COMPTE.github.io/Import-vehicules/admin.html` une fois le site en ligne. L'espace a deux rubriques, en haut de la page :
+Ouvrez `admin.html` : `http://localhost:8000/admin.html` sur votre ordinateur, ou `https://atlantic-motors.github.io/admin.html` une fois le site en ligne. L'espace a deux rubriques, en haut de la page :
 
 | Rubrique | Ce qu'on y fait | Comment se connecter |
 |---|---|---|
@@ -105,7 +105,7 @@ Le bouton WhatsApp ouvre directement une conversation avec vous, avec le message
 Le plus simple pour gérer vos véhicules est l'espace propriétaire, à l'adresse :
 
 ```
-https://VOTRE-COMPTE.github.io/Import-vehicules/admin.html
+https://atlantic-motors.github.io/admin.html
 ```
 
 Il permet, depuis un ordinateur ou un téléphone, de :
@@ -127,7 +127,7 @@ Le site est statique : il n'a pas de serveur pour vérifier un mot de passe. Un 
 
 1. Connectez-vous sur [github.com](https://github.com), puis ouvrez [Fine-grained tokens → Generate new token](https://github.com/settings/personal-access-tokens/new).
 2. **Token name** : par exemple « Site — espace propriétaire ». **Expiration** : choisissez une durée (par exemple 1 an).
-3. **Repository access** : « Only select repositories », puis le dépôt `Import-vehicules` uniquement.
+3. **Resource owner** : choisissez l'organisation **atlantic-motors** (et non votre compte personnel). **Repository access** : « Only select repositories », puis le dépôt `atlantic-motors.github.io` uniquement.
 4. **Permissions → Repository permissions → Contents** : « Read and write ».
 5. **Generate token**, puis copiez la clé (`github_pat_…`). Rangez-la dans votre gestionnaire de mots de passe : GitHub ne l'affiche qu'une fois.
 
@@ -235,22 +235,17 @@ puis ouvrez [http://localhost:8000](http://localhost:8000). Arrêtez le serveur 
 
 ## Mettre le site en ligne avec GitHub Pages
 
-1. **Créer le dépôt** : sur [github.com](https://github.com), créez un dépôt (ex. `atlantic-motors`), public. GitHub Pages gratuit nécessite un dépôt public, sauf abonnement payant.
-2. **Envoyer les fichiers** : depuis ce dossier,
-   ```bash
-   git add .
-   git commit -m "Mise en ligne du site"
-   git branch -M main
-   git remote add origin https://github.com/VOTRE-COMPTE/atlantic-motors.git   # si ce n'est pas déjà fait
-   git push -u origin main
-   ```
-   (Vous pouvez aussi utiliser GitHub Desktop, ou glisser-déposer les fichiers via « Add file → Upload files » sur github.com.)
-3. **Activer Pages** : dans le dépôt, **Settings → Pages**. Sous « Build and deployment », choisissez **Source : Deploy from a branch**, branche **main**, dossier **/ (root)**, puis **Save**.
-4. Après une à deux minutes, le site est en ligne à l'adresse `https://VOTRE-COMPTE.github.io/atlantic-motors/` (affichée en haut de la page Settings → Pages).
-5. **Mises à jour** : chaque modification envoyée sur la branche `main` (par exemple un nouveau véhicule dans `vehicles.json`) est publiée automatiquement en une à deux minutes. Pour un changement rapide, vous pouvez éditer `vehicles.json` directement sur github.com (icône crayon), puis « Commit changes ».
+Le site est publié depuis l'organisation GitHub **atlantic-motors**, dans le dépôt public `atlantic-motors.github.io`. Son adresse est :
+
+**https://atlantic-motors.github.io/**
+
+- **Mises à jour** : chaque modification envoyée sur la branche `main` (par exemple un véhicule ajouté depuis l'espace propriétaire) est publiée automatiquement en une à deux minutes.
+- **Envoyer vos modifications locales** : `git add .`, `git commit -m "…"`, puis `git push` (ou GitHub Desktop). Faites d'abord un `git pull` si vous avez utilisé l'espace propriétaire entre-temps.
+- **Réglages** : sur github.com, dépôt `atlantic-motors.github.io` → **Settings → Pages** (source : branche `main`, dossier `/ (root)`).
+- **Changer l'adresse** : si le nom de l'entreprise change, renommez l'organisation (Settings de l'organisation) **et** le dépôt avec le même nom suivi de `.github.io`, puis mettez à jour la rubrique `github` de `js/config.js`.
 
 ### Utiliser votre propre nom de domaine (facultatif)
 
-Dans **Settings → Pages → Custom domain**, saisissez votre domaine (ex. `www.atlantic-motors.fr`), puis chez votre registraire de domaine créez un enregistrement `CNAME` pointant `www` vers `VOTRE-COMPTE.github.io`. Cochez ensuite **Enforce HTTPS**.
+Dans **Settings → Pages → Custom domain**, saisissez votre domaine (ex. `www.atlantic-motors.fr`), puis chez votre registraire de domaine créez un enregistrement `CNAME` pointant `www` vers `atlantic-motors.github.io`. Cochez ensuite **Enforce HTTPS**.
 
 Pensez à ajouter votre domaine dans les réglages de votre formulaire Formspree si vous y avez restreint les domaines autorisés.

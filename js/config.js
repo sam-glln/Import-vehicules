@@ -49,8 +49,8 @@ window.SITE = {
   // Dépôt GitHub où est publié le site : c'est là que l'espace propriétaire
   // enregistre l'inventaire et les photos.
   github: {
-    owner: "sam-glln",          // votre nom d'utilisateur GitHub
-    repo: "Import-vehicules",   // le nom du dépôt
+    owner: "atlantic-motors",              // l'organisation GitHub
+    repo: "atlantic-motors.github.io",     // le nom du dépôt
     branch: "main",             // la branche publiée par GitHub Pages
   },
 };
