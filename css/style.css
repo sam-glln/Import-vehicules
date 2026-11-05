@@ -1175,3 +1175,30 @@ a:hover > .link-arrow::after, .link-arrow:hover::after { transform: translateX(6
   .show-body > div:last-child { display: flex; align-items: center; gap: 1.4rem; }
   .show-price { margin: 0; }
 }
+
+/* =========================================================
+   Logo — le fichier assets/img/logo.svg sert de pochoir :
+   il prend automatiquement la couleur du texte (blanc sur fond noir).
+   Pour changer de logo, remplacez simplement ce fichier.
+   ========================================================= */
+.brand { display: inline-flex; align-items: center; gap: 0.85rem; }
+.brand-mark {
+  display: inline-block; flex: none;
+  height: 30px; aspect-ratio: 447 / 376;
+  background: currentColor;
+  -webkit-mask: url("../assets/img/logo.svg") center / contain no-repeat;
+  mask: url("../assets/img/logo.svg") center / contain no-repeat;
+  transition: transform 0.6s var(--ease-out);
+}
+.brand:hover .brand-mark { transform: translateY(-2px); }
+.footer-brand .brand-mark { height: 40px; }
+@media (max-width: 420px) {
+  .site-header .brand-name { font-size: 0.86rem; letter-spacing: 0.1em; }
+}
+
+/* Accueil : titre plus court et plus discret */
+.ride-intro h1 { font-size: clamp(1.7rem, 4.4vw, 3.3rem); max-width: none; margin-bottom: 1.1rem; }
+.ride-intro p { font-size: 1rem; max-width: 26rem; margin-bottom: 2rem; }
+.footer-brand .brand { display: inline-flex; }
+.ride-intro h1 { font-size: clamp(1.7rem, 3.8vw, 2.9rem); }
+.ride-intro p { max-width: 32rem; }

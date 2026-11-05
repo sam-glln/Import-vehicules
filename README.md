@@ -211,6 +211,7 @@ Modifiez le texte entre les balises, puis mettez à jour la phrase « Informatio
 
 ## Remplacer les photos
 
+- **Logo** : `assets/img/logo.svg` (version vectorielle de votre logo « AM », affichée en blanc dans l'en-tête et le pied de page) et `assets/img/favicon.svg` (icône de l'onglet). L'original fourni est conservé dans `assets/img/logo-original.png`. Pour changer de logo, remplacez `logo.svg` par un SVG noir sur fond transparent : il prend automatiquement la couleur du site.
 - **Page d'accueil** : deux photos de la même voiture, `assets/img/accueil-exterieur.jpg` (vue extérieure, paysage) et `assets/img/accueil-interieur.jpg` (habitacle). En faisant défiler, la page zoome vers l'habitacle de la photo extérieure puis passe à l'intérieur. Si vous changez de photo, réglez le point de zoom dans `index.html` avec `data-focus="60% 34%"` : position horizontale puis verticale de l'habitacle sur la photo (0 % = gauche/haut, 100 % = droite/bas). Une voiture décapotable ou vue de trois quarts avant donne le meilleur effet.
 - **Photos des pages d'import** : dans `import-canada.html` / `import-etats-unis.html`, modifiez le chemin dans `<div class="page-hero-media" style="background-image: url('…')">`.
 - **Photos des véhicules** : voir plus haut.

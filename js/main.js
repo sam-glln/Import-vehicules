@@ -52,7 +52,8 @@
       '<a class="skip-link" href="#contenu">Aller au contenu</a>' +
       '<header class="site-header" id="site-header">' +
       '<div class="header-inner">' +
-      '<a class="brand" href="index.html">' + esc(SITE.nom) + "</a>" +
+      '<a class="brand" href="index.html" aria-label="' + esc(SITE.nom) + ' — accueil">' +
+      '<span class="brand-mark" aria-hidden="true"></span><span class="brand-name">' + esc(SITE.nom) + "</span></a>" +
       '<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Ouvrir le menu">' +
       "<span></span><span></span></button>" +
       '<nav class="main-nav" id="main-nav" aria-label="Navigation principale">' +
@@ -67,7 +68,7 @@
       '<footer class="site-footer">' +
       '<div class="container footer-inner">' +
       '<div class="footer-brand">' +
-      '<span class="brand">' + esc(SITE.nom) + "</span>" +
+      '<span class="brand"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">' + esc(SITE.nom) + "</span></span>" +
       "<p>Importation de véhicules nord-américains — Canada &amp; États-Unis vers la France.</p>" +
       "</div>" +
       '<ul class="footer-links">' +
