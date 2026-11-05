@@ -1,0 +1,142 @@
+[
+  {
+    "id": "am-001",
+    "marque": "Chevrolet",
+    "modele": "3100 Pick-up",
+    "annee": 1949,
+    "kilometrage": 112400,
+    "prix": 34900,
+    "statut": "disponible",
+    "origine": "États-Unis (Texas)",
+    "photos": [
+      "assets/img/vehicules/pickup-1949-1.jpg",
+      "assets/img/vehicules/pickup-1949-2.jpg"
+    ],
+    "description": "Pick-up Chevrolet de la série Advance Design, restauré avec soin. Carrosserie saine, plateau bois refait, moteur 6 cylindres révisé. Éligible à la carte grise de collection.",
+    "caracteristiques": {
+      "Moteur": "6 cylindres en ligne 3,5 L",
+      "Boîte": "Manuelle 4 rapports",
+      "Carburant": "Essence",
+      "Transmission": "Propulsion",
+      "Couleur": "Jaune / chromes",
+      "Immatriculation": "Carte grise de collection"
+    }
+  },
+  {
+    "id": "am-002",
+    "marque": "Chevrolet",
+    "modele": "Corvette C2 Sting Ray Cabriolet",
+    "annee": 1963,
+    "kilometrage": 78300,
+    "prix": 89000,
+    "statut": "reserve",
+    "origine": "États-Unis (Californie)",
+    "photos": [
+      "assets/img/vehicules/corvette-1963-1.jpg",
+      "assets/img/vehicules/corvette-1963-2.jpg",
+      "assets/img/vehicules/corvette-1963-3.jpg",
+      "assets/img/vehicules/corvette-1963-4.jpg"
+    ],
+    "description": "Première année de la Corvette C2, en configuration cabriolet. Historique d'entretien documenté, numéros concordants, sellerie rouge d'origine restaurée.",
+    "caracteristiques": {
+      "Moteur": "V8 327 ci (5,4 L)",
+      "Boîte": "Manuelle 4 rapports",
+      "Carburant": "Essence",
+      "Transmission": "Propulsion",
+      "Couleur": "Ermine White / intérieur rouge",
+      "Immatriculation": "Carte grise de collection"
+    }
+  },
+  {
+    "id": "am-003",
+    "marque": "Ford",
+    "modele": "Mustang Coupé",
+    "annee": 1967,
+    "kilometrage": 96500,
+    "prix": 42500,
+    "statut": "disponible",
+    "origine": "Canada (Ontario)",
+    "photos": [
+      "assets/img/vehicules/mustang-1967-1.jpg",
+      "assets/img/vehicules/mustang-1967-2.jpg",
+      "assets/img/vehicules/mustang-1967-3.jpg"
+    ],
+    "description": "Mustang de première génération, carrosserie restaurée et protégée, moteur V8 289 en excellent état de fonctionnement. Véhicule ayant toujours vécu au Canada, remisé l'hiver.",
+    "caracteristiques": {
+      "Moteur": "V8 289 ci (4,7 L)",
+      "Boîte": "Automatique 3 rapports",
+      "Carburant": "Essence",
+      "Transmission": "Propulsion",
+      "Couleur": "Rouge",
+      "Immatriculation": "Carte grise de collection"
+    }
+  },
+  {
+    "id": "am-004",
+    "marque": "Ford",
+    "modele": "Bronco Wildtrak",
+    "annee": 2021,
+    "kilometrage": 38200,
+    "prix": 74900,
+    "statut": "disponible",
+    "origine": "Canada (Québec)",
+    "photos": [
+      "assets/img/vehicules/bronco-2021-1.jpg",
+      "assets/img/vehicules/bronco-2021-2.jpg"
+    ],
+    "description": "Bronco Wildtrak quatre portes, pack Sasquatch, toit rigide modulable. Un seul propriétaire, entretien chez concessionnaire. Prix incluant homologation française et malus.",
+    "caracteristiques": {
+      "Moteur": "V6 2,7 L EcoBoost",
+      "Boîte": "Automatique 10 rapports",
+      "Carburant": "Essence",
+      "Transmission": "4x4",
+      "Couleur": "Gris Carbonized",
+      "Immatriculation": "Réception à titre isolé (RTI)"
+    }
+  },
+  {
+    "id": "am-005",
+    "marque": "Ford",
+    "modele": "F-150 Raptor",
+    "annee": 2024,
+    "kilometrage": 12600,
+    "prix": 129000,
+    "statut": "vendu",
+    "origine": "États-Unis (Floride)",
+    "photos": [
+      "assets/img/vehicules/raptor-2024-1.jpg"
+    ],
+    "description": "Pick-up F-150 Raptor double cabine, suspensions Fox, échappement actif. Prix rendu France incluant transport, dédouanement, homologation et malus.",
+    "caracteristiques": {
+      "Moteur": "V6 3,5 L EcoBoost biturbo",
+      "Boîte": "Automatique 10 rapports",
+      "Carburant": "Essence",
+      "Transmission": "4x4",
+      "Couleur": "Blanc Oxford",
+      "Immatriculation": "Réception à titre isolé (RTI)"
+    }
+  },
+  {
+    "id": "am-006",
+    "marque": "Pontiac",
+    "modele": "Firebird 400",
+    "annee": 1968,
+    "kilometrage": 64800,
+    "prix": 46000,
+    "statut": "disponible",
+    "origine": "États-Unis (Arizona)",
+    "photos": [
+      "assets/img/vehicules/firebird-1968-1.jpg",
+      "assets/img/vehicules/firebird-1968-2.jpg"
+    ],
+    "description": "Firebird 400 de première génération, climat sec de l'Arizona : châssis sans corrosion. Moteur V8 400 révisé, freins à disque avant.",
+    "caracteristiques": {
+      "Moteur": "V8 400 ci (6,6 L)",
+      "Boîte": "Automatique Turbo-Hydramatic 3 rapports",
+      "Carburant": "Essence",
+      "Transmission": "Propulsion",
+      "Couleur": "Verdoro Green",
+      "Immatriculation": "Carte grise de collection"
+    }
+  }
+]

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Contact — Atlantic Motors</title>
+  <meta name="description" content="Demande de renseignements pour l'achat ou l'importation d'un véhicule du Canada ou des États-Unis.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main id="contenu">
+    <header class="page-hero">
+      <div class="container hero-anim">
+        <span class="eyebrow">Contact</span>
+        <h1>Parlons de votre projet</h1>
+        <p class="lead">Décrivez le véhicule que vous recherchez ou posez-nous vos questions sur l'importation. Réponse sous 48 heures ouvrées.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container contact-grid">
+
+        <aside class="contact-aside reveal">
+          <h2>Un interlocuteur unique</h2>
+          <p>Recherche, inspection, achat, transport, dédouanement, homologation et carte grise : nous coordonnons chaque étape et vous tenons informé jusqu'à la remise des clés.</p>
+          <ul class="contact-lines">
+            <li><span class="lbl">E-mail</span><a data-site="email" href="mailto:contact@exemple.fr">contact@exemple.fr</a></li>
+            <li><span class="lbl">Téléphone</span><a data-site="telephone" href="tel:+33600000000">+33 6 00 00 00 00</a></li>
+            <li><span class="lbl">Zone</span><span data-site="zone">Basé en France</span></li>
+          </ul>
+
+          <!-- Réseaux sociaux et WhatsApp : les liens se règlent dans js/config.js -->
+          <div class="social-block">
+            <h3 class="social-title">Retrouvez-nous</h3>
+            <ul class="social-list" data-social></ul>
+          </div>
+        </aside>
+
+        <div class="reveal" style="--delay: 120ms">
+          <p class="vehicle-notice" id="vehicle-notice" hidden>Demande concernant : <strong></strong></p>
+
+          <!--
+            ENVOI DU FORMULAIRE : Formspree
+            L'identifiant Formspree se règle dans js/config.js (champ formspreeId).
+          -->
+          <form id="contact-form" method="POST" novalidate>
+            <input type="hidden" name="_subject" value="Nouvelle demande depuis le site">
+            <input type="hidden" name="reference" id="reference" value="">
+            <!-- Champ piège anti-spam : ne pas supprimer -->
+            <div class="hp" aria-hidden="true"><label>Ne pas remplir <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="nom">Nom</label>
+                <input id="nom" name="nom" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email" autocomplete="email" required>
+              </div>
+              <div class="field">
+                <label for="telephone">Téléphone <span class="opt">(facultatif)</span></label>
+                <input id="telephone" name="telephone" type="tel" autocomplete="tel">
+              </div>
+              <div class="field">
+                <label for="budget">Budget</label>
+                <select id="budget" name="budget">
+                  <option value="">Sélectionnez une fourchette</option>
+                  <option>Moins de 25 000 €</option>
+                  <option>25 000 € – 50 000 €</option>
+                  <option>50 000 € – 80 000 €</option>
+                  <option>80 000 € – 120 000 €</option>
+                  <option>Plus de 120 000 €</option>
+                </select>
+              </div>
+              <div class="field field-full">
+                <label for="vehicule">Véhicule recherché</label>
+                <input id="vehicule" name="vehicule" type="text" placeholder="Ex. : Ford Bronco 1972, Chevrolet C10, Dodge Ram TRX…">
+              </div>
+              <div class="field field-full">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="6" required placeholder="Année, couleur, état souhaité, délai…"></textarea>
+              </div>
+              <div class="field-full">
+                <label class="consent">
+                  <input type="checkbox" name="consentement" value="oui" required>
+                  <span>J'accepte que mes données soient utilisées uniquement pour répondre à ma demande. Voir les <a href="mentions-legales.html" style="text-decoration: underline;">mentions légales</a>.</span>
+                </label>
+              </div>
+              <div class="field-full form-actions">
+                <button class="btn btn-solid" type="submit">Envoyer la demande</button>
+                <p class="form-status" id="form-status" role="status" hidden></p>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/contact.js"></script>
+</body>
+</html>

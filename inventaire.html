@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Inventaire — Atlantic Motors</title>
+  <meta name="description" content="Véhicules nord-américains disponibles à la vente, prix rendus France : classiques, muscle cars, pick-ups et 4x4.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main id="contenu">
+    <header class="page-hero">
+      <div class="container hero-anim">
+        <span class="eyebrow">Inventaire</span>
+        <h1>Véhicules disponibles</h1>
+        <p class="lead">Une sélection de véhicules inspectés en Amérique du Nord. Tous les prix s'entendent rendus France : transport, dédouanement et homologation compris.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <div class="inventory-bar">
+          <div class="filters" id="filters" role="group" aria-label="Filtrer par statut">
+            <button type="button" data-filter="tous" aria-pressed="true">Tous</button>
+            <button type="button" data-filter="disponible" aria-pressed="false">Disponibles</button>
+            <button type="button" data-filter="reserve" aria-pressed="false">Réservés</button>
+            <button type="button" data-filter="vendu" aria-pressed="false">Vendus</button>
+          </div>
+          <p class="vehicle-count" id="vehicle-count" aria-live="polite"></p>
+        </div>
+
+        <!-- La grille est remplie automatiquement à partir du fichier vehicles.json -->
+        <div class="vehicle-grid" id="vehicle-grid"></div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="container reveal">
+        <h2>Vous cherchez un modèle précis ?</h2>
+        <p>Nous le recherchons pour vous au Canada et aux États-Unis.</p>
+        <a class="btn" href="contact.html">Confier une recherche</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Fiche détaillée d'un véhicule -->
+  <dialog class="vehicle-dialog" id="vehicle-dialog" aria-labelledby="dialog-title">
+    <button class="dialog-close" type="button" aria-label="Fermer la fiche">×</button>
+    <div id="dialog-body"></div>
+  </dialog>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/inventaire.js"></script>
+</body>
+</html>

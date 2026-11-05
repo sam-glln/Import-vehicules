@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Espace propriétaire — Atlantic Motors</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a class="brand" href="index.html" data-site="nom">Atlantic Motors</a>
+      <span class="admin-tag">Espace propriétaire</span>
+      <div class="admin-header-actions">
+        <a class="admin-link" href="inventaire.html" target="_blank" rel="noopener">Voir le site ↗</a>
+        <button class="admin-link" id="logout" type="button" hidden>Se déconnecter</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main" id="contenu">
+
+    <!-- ================= CONNEXION ================= -->
+    <section id="login-view" class="login" hidden>
+      <span class="eyebrow">Connexion</span>
+      <h1>Espace propriétaire</h1>
+      <p class="admin-lead">Connectez-vous avec votre clé d'accès GitHub pour gérer l'inventaire. Les modifications sont publiées directement sur le site.</p>
+
+      <form id="login-form" class="login-form" novalidate>
+        <div class="field">
+          <label for="token">Clé d'accès GitHub</label>
+          <input id="token" name="token" type="password" autocomplete="current-password" spellcheck="false" placeholder="github_pat_…" required>
+        </div>
+        <label class="consent">
+          <input type="checkbox" id="remember" checked>
+          <span>Rester connecté sur cet appareil (à éviter sur un ordinateur partagé)</span>
+        </label>
+        <button class="btn btn-solid" type="submit">Se connecter</button>
+        <p class="form-status error" id="login-error" role="alert" hidden></p>
+      </form>
+
+      <details class="help">
+        <summary>Comment obtenir ma clé d'accès&nbsp;?</summary>
+        <ol>
+          <li>Connectez-vous sur <a href="https://github.com" target="_blank" rel="noopener">github.com</a>, puis ouvrez <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">cette page de création de clé</a> (Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token).</li>
+          <li><strong>Token name</strong> : par exemple « Site — espace propriétaire ». <strong>Expiration</strong> : choisissez une durée (par exemple 1 an), il faudra la renouveler ensuite.</li>
+          <li><strong>Repository access</strong> : « Only select repositories », puis sélectionnez le dépôt <strong id="help-repo">du site</strong> uniquement.</li>
+          <li><strong>Permissions → Repository permissions → Contents</strong> : choisissez « Read and write ».</li>
+          <li>Cliquez sur <strong>Generate token</strong>, copiez la clé (elle commence par <code>github_pat_</code>) et collez-la ci-dessus. Conservez-la dans votre gestionnaire de mots de passe : GitHub ne l'affiche qu'une fois.</li>
+        </ol>
+      </details>
+    </section>
+
+    <!-- ================= LISTE ================= -->
+    <section id="list-view" hidden>
+      <div class="admin-toolbar">
+        <div>
+          <span class="eyebrow">Inventaire</span>
+          <h1>Vos véhicules <span class="admin-count" id="admin-count"></span></h1>
+        </div>
+        <button class="btn btn-solid" id="add-vehicle" type="button">Ajouter un véhicule</button>
+      </div>
+      <p class="admin-hint">L'ordre ci-dessous est celui de la page Inventaire. Chaque modification est publiée immédiatement&nbsp;; le site en ligne se met à jour en une à deux minutes.</p>
+      <ul class="admin-list" id="admin-list"></ul>
+    </section>
+
+    <!-- ================= ÉDITION ================= -->
+    <section id="edit-view" hidden>
+      <button class="admin-back" id="back-to-list" type="button">← Retour à la liste</button>
+      <span class="eyebrow" id="edit-eyebrow">Nouveau véhicule</span>
+      <h1 id="edit-title">Ajouter un véhicule</h1>
+
+      <form id="vehicle-form" class="vehicle-form" novalidate>
+        <fieldset>
+          <legend>Informations</legend>
+          <div class="form-grid">
+            <div class="field"><label for="f-marque">Marque</label><input id="f-marque" name="marque" required placeholder="Chevrolet"></div>
+            <div class="field"><label for="f-modele">Modèle</label><input id="f-modele" name="modele" required placeholder="C10 Pick-up"></div>
+            <div class="field"><label for="f-annee">Année</label><input id="f-annee" name="annee" type="number" inputmode="numeric" min="1900" max="2100" required></div>
+            <div class="field"><label for="f-km">Kilométrage (km)</label><input id="f-km" name="kilometrage" type="number" inputmode="numeric" min="0" step="1" required></div>
+            <div class="field"><label for="f-prix">Prix rendu France (€) <span class="opt">— vide = « Prix sur demande »</span></label><input id="f-prix" name="prix" type="number" inputmode="numeric" min="0" step="1"></div>
+            <div class="field">
+              <label for="f-statut">Statut</label>
+              <select id="f-statut" name="statut">
+                <option value="disponible">Disponible</option>
+                <option value="reserve">Réservé</option>
+                <option value="vendu">Vendu</option>
+              </select>
+            </div>
+            <div class="field field-full"><label for="f-origine">Origine</label><input id="f-origine" name="origine" placeholder="États-Unis (Texas)"></div>
+            <div class="field field-full"><label for="f-description">Description</label><textarea id="f-description" name="description" rows="4" placeholder="Quelques phrases de présentation du véhicule."></textarea></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Photos</legend>
+          <p class="admin-hint">La première photo sert de vignette dans l'inventaire. Les photos sont redimensionnées automatiquement avant l'envoi.</p>
+          <ul class="photo-grid" id="photo-grid"></ul>
+          <label class="dropzone" id="dropzone">
+            <input type="file" id="photo-input" accept="image/*" multiple>
+            <span>Ajouter des photos</span>
+            <small>Cliquez ou glissez vos images ici (JPEG, PNG, WebP)</small>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Caractéristiques</legend>
+          <p class="admin-hint">Les lignes laissées vides ne sont pas affichées.</p>
+          <div class="specs-editor" id="specs-editor"></div>
+          <button class="admin-link" type="button" id="add-spec">+ Ajouter une ligne</button>
+        </fieldset>
+
+        <div class="form-actions edit-actions">
+          <button class="btn btn-solid" type="submit" id="save-btn">Publier</button>
+          <button class="admin-link" type="button" id="cancel-edit">Annuler</button>
+        </div>
+      </form>
+    </section>
+
+    <div class="admin-loading" id="loading" hidden><span></span>Chargement…</div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
