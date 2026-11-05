@@ -5,22 +5,26 @@ Site statique (HTML, CSS, JavaScript, sans framework) pour une activité d'impor
 ## Organisation des fichiers
 
 ```
-index.html               Accueil
+index.html               Accueil animé (on « monte à bord » en faisant défiler)
 inventaire.html          Inventaire (grille + fiche détaillée)
 import-canada.html       Import Canada → France
 import-etats-unis.html   Import États-Unis → France
-contact.html             Formulaire de contact (Formspree)
+contact.html             Formulaire de contact
 mentions-legales.html    Mentions légales (modèle à compléter)
-admin.html               ← espace propriétaire (gestion de l'inventaire)
+admin.html               ← espace propriétaire (inventaire + dossier des demandes)
+supabase/installation.sql  Installation du dossier des demandes (Supabase)
 vehicles.json            ← la liste des véhicules à vendre
-js/config.js             ← nom du site, coordonnées, Formspree, réseaux sociaux, dépôt GitHub
-js/admin.js              Espace propriétaire
+js/config.js             ← nom du site, coordonnées, Supabase, Formspree, réseaux sociaux, dépôt GitHub
+js/admin.js              Espace propriétaire : inventaire
+js/admin-demandes.js     Espace propriétaire : dossier des demandes
+js/demandes.js           Envoi des demandes des visiteurs
+js/accueil.js            Animation de la page d'accueil
 js/main.js               Menu, pied de page, animations
 js/inventaire.js         Affichage de l'inventaire
-js/contact.js            Envoi du formulaire
+js/contact.js            Formulaire de la page Contact
 css/style.css            Styles (couleurs en haut du fichier)
 css/admin.css            Styles de l'espace propriétaire
-assets/img/              Photos (hero.jpg = photo d'accueil)
+assets/img/              Photos (accueil-exterieur.jpg et accueil-interieur.jpg = page d'accueil)
 assets/img/vehicules/    Photos des véhicules
 ```
 
@@ -30,20 +34,54 @@ Ouvrez `js/config.js` et modifiez :
 
 - `nom` : le nom de l'entreprise. Il est mis à jour automatiquement dans le menu, le pied de page, les titres d'onglet et les mentions légales.
 - `email`, `telephone`, `zone` : vos coordonnées.
-- `formspreeId` : votre identifiant Formspree (voir ci-dessous).
+- `supabase` : votre dossier des demandes (voir « Dossier des demandes »).
+- `formspreeId` : facultatif, pour recevoir aussi chaque demande par e-mail (voir ci-dessous).
 - `reseaux` et `whatsapp` : vos réseaux sociaux et votre numéro WhatsApp (voir ci-dessous).
 - `github` : le dépôt GitHub du site, utilisé par l'espace propriétaire (déjà réglé sur `sam-glln/Import-vehicules`).
 
 > Astuce : le nom « Atlantic Motors » figure aussi en dur dans la balise `<title>` de chaque page (il y est remplacé à l'affichage). Pour le référencement, faites un « Rechercher / Remplacer » de `Atlantic Motors` dans tout le dossier avec votre éditeur (VS Code : `Cmd + Maj + H`).
 
-## Configurer le formulaire (Formspree)
+## Se connecter à mon espace
+
+Ouvrez `admin.html` : `http://localhost:8000/admin.html` sur votre ordinateur, ou `https://VOTRE-COMPTE.github.io/Import-vehicules/admin.html` une fois le site en ligne. L'espace a deux rubriques, en haut de la page :
+
+| Rubrique | Ce qu'on y fait | Comment se connecter |
+|---|---|---|
+| **Inventaire** | ajouter, modifier, supprimer des véhicules | votre **clé d'accès GitHub** (voir « Créer votre clé d'accès ») |
+| **Demandes** | consulter et suivre les demandes des visiteurs | l'**e-mail et le mot de passe** du compte propriétaire Supabase (voir « Dossier des demandes ») |
+
+Cochez « Rester connecté » pour ne pas avoir à le refaire sur cet appareil. « Se déconnecter » ferme les deux rubriques.
+
+## Dossier des demandes (Supabase)
+
+Toutes les demandes des visiteurs arrivent dans la rubrique **Demandes** de votre espace propriétaire :
+
+- le formulaire « à bord de la voiture » de la page d'accueil ;
+- le bouton **« Faire une demande d'information »** de chaque fiche véhicule (la demande indique le véhicule concerné et sa référence) ;
+- le formulaire de la page Contact.
+
+Pour chaque demande, vous voyez la date, la provenance, les coordonnées (avec des liens directs pour répondre par e-mail, appeler ou écrire sur WhatsApp), le véhicule, le budget et le message. Vous pouvez la classer (Nouvelle, En cours, Traitée, Archivée), y ajouter des notes internes visibles de vous seul, ou la supprimer. Une pastille dorée indique le nombre de nouvelles demandes.
+
+Le site étant statique, les demandes sont stockées dans **Supabase**, une base de données en ligne avec une offre gratuite. Installation (environ 10 minutes, une seule fois) :
+
+1. Créez un compte sur [supabase.com](https://supabase.com), puis **New project**. Choisissez la région **West EU (Paris)** (données en France, plus simple pour le RGPD) et notez le mot de passe de base de données proposé (il ne servira pas au site).
+2. Ouvrez `supabase/installation.sql`, remplacez les **deux** `VOTRE_EMAIL@exemple.fr` par l'adresse e-mail avec laquelle vous vous connecterez, puis copiez tout le fichier dans Supabase → **SQL Editor** → **New query** → **Run**.
+3. **Authentication → Users → Add user → Create new user** : saisissez cette même adresse e-mail et un mot de passe solide, et cochez **Auto Confirm User**.
+4. **Authentication → Sign In / Providers** (ou *Settings*) : désactivez **Allow new users to sign up**, pour que personne d'autre ne puisse créer de compte.
+5. **Project Settings → API Keys** (ou *Data API*) : copiez l'**URL du projet** (`https://xxxx.supabase.co`) et la **Publishable key** (`sb_publishable_…`, ou à défaut l'« anon public key »). Collez-les dans `js/config.js`, rubrique `supabase`.
+
+La clé publique est faite pour être visible dans le code du site : les règles installées à l'étape 2 permettent aux visiteurs de **déposer** une demande, jamais d'en lire une. Seul votre compte, identifié par son e-mail, peut lire, classer et supprimer les demandes.
+
+> ⚠️ Sur l'offre gratuite, Supabase met en pause un projet resté **inactif pendant une semaine**. Ouvrir l'onglet Demandes de votre espace compte comme une activité. Si le projet est en pause, un bouton « Restore » le relance dans le tableau de bord Supabase. Configurer aussi Formspree (ci-dessous) vous garantit de recevoir chaque demande par e-mail quoi qu'il arrive.
+
+## Recevoir aussi les demandes par e-mail (Formspree, facultatif)
 
 1. Créez un compte gratuit sur [formspree.io](https://formspree.io).
 2. Créez un nouveau formulaire (« New Form ») et indiquez l'adresse e-mail qui recevra les messages.
 3. Formspree vous donne une adresse du type `https://formspree.io/f/xyzabcde`. Copiez la fin, `xyzabcde`.
 4. Collez-la dans `js/config.js` à la place de `VOTRE_ID_FORMSPREE`.
 
-Tant que l'identifiant n'est pas renseigné, le formulaire affiche un message « non configuré » au lieu d'envoyer.
+Chaque demande est alors enregistrée dans votre dossier **et** envoyée par e-mail. Si ni Supabase ni Formspree n'est configuré, les formulaires affichent un message « non configuré » au lieu d'envoyer.
 
 ## Réseaux sociaux et WhatsApp
 
@@ -173,7 +211,7 @@ Modifiez le texte entre les balises, puis mettez à jour la phrase « Informatio
 
 ## Remplacer les photos
 
-- **Photo d'accueil** : remplacez `assets/img/hero.jpg` par votre photo (même nom), format paysage.
+- **Page d'accueil** : deux photos de la même voiture, `assets/img/accueil-exterieur.jpg` (vue extérieure, paysage) et `assets/img/accueil-interieur.jpg` (habitacle). En faisant défiler, la page zoome vers l'habitacle de la photo extérieure puis passe à l'intérieur. Si vous changez de photo, réglez le point de zoom dans `index.html` avec `data-focus="60% 34%"` : position horizontale puis verticale de l'habitacle sur la photo (0 % = gauche/haut, 100 % = droite/bas). Une voiture décapotable ou vue de trois quarts avant donne le meilleur effet.
 - **Photos des pages d'import** : dans `import-canada.html` / `import-etats-unis.html`, modifiez le chemin dans `<div class="page-hero-media" style="background-image: url('…')">`.
 - **Photos des véhicules** : voir plus haut.
 

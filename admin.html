@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0a0a0a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
 </head>
@@ -18,6 +18,10 @@
     <div class="admin-header-inner">
       <a class="brand" href="index.html" data-site="nom">Atlantic Motors</a>
       <span class="admin-tag">Espace propriétaire</span>
+      <nav class="admin-tabs" aria-label="Rubriques">
+        <a href="#inventaire" data-tab="inventaire">Inventaire</a>
+        <a href="#demandes" data-tab="demandes">Demandes <span class="tab-count" id="tab-count" hidden></span></a>
+      </nav>
       <div class="admin-header-actions">
         <a class="admin-link" href="inventaire.html" target="_blank" rel="noopener">Voir le site ↗</a>
         <button class="admin-link" id="logout" type="button" hidden>Se déconnecter</button>
@@ -124,6 +128,47 @@
       </form>
     </section>
 
+    <!-- ================= DEMANDES ================= -->
+    <section id="demandes-view" hidden>
+
+      <div id="sb-login" class="login" hidden>
+        <span class="eyebrow">Dossier des demandes</span>
+        <h1>Connexion</h1>
+        <p class="admin-lead">Identifiez-vous avec le compte propriétaire créé dans Supabase pour consulter les demandes de vos visiteurs.</p>
+        <form id="sb-login-form" class="login-form" novalidate>
+          <div class="field"><label for="sb-email">E-mail</label><input id="sb-email" type="email" autocomplete="username" required></div>
+          <div class="field"><label for="sb-password">Mot de passe</label><input id="sb-password" type="password" autocomplete="current-password" required></div>
+          <label class="consent"><input type="checkbox" id="sb-remember" checked><span>Rester connecté sur cet appareil</span></label>
+          <button class="btn btn-solid" type="submit">Se connecter</button>
+          <p class="form-status error" id="sb-error" role="alert" hidden></p>
+        </form>
+      </div>
+
+      <div id="sb-missing" class="login" hidden>
+        <span class="eyebrow">Dossier des demandes</span>
+        <h1>À configurer</h1>
+        <p class="admin-lead">Le dossier des demandes n'est pas encore relié. Suivez la rubrique « Dossier des demandes » du README, puis renseignez l'adresse et la clé publique Supabase dans <code>js/config.js</code>.</p>
+      </div>
+
+      <div id="sb-list" hidden>
+        <div class="admin-toolbar">
+          <div>
+            <span class="eyebrow">Dossier</span>
+            <h1>Demandes <span class="admin-count" id="req-count"></span></h1>
+          </div>
+          <button class="btn" id="req-refresh" type="button">Actualiser</button>
+        </div>
+        <div class="filters req-filters" id="req-filters" role="group" aria-label="Filtrer les demandes">
+          <button type="button" data-filter="nouvelle" aria-pressed="true">Nouvelles</button>
+          <button type="button" data-filter="en_cours" aria-pressed="false">En cours</button>
+          <button type="button" data-filter="traitee" aria-pressed="false">Traitées</button>
+          <button type="button" data-filter="archivee" aria-pressed="false">Archivées</button>
+          <button type="button" data-filter="toutes" aria-pressed="false">Toutes</button>
+        </div>
+        <ul class="req-list" id="req-list"></ul>
+      </div>
+    </section>
+
     <div class="admin-loading" id="loading" hidden><span></span>Chargement…</div>
   </main>
 
@@ -131,5 +176,6 @@
 
   <script src="js/config.js"></script>
   <script src="js/admin.js"></script>
+  <script src="js/admin-demandes.js"></script>
 </body>
 </html>

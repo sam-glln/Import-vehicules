@@ -12,7 +12,18 @@ window.SITE = {
   telephone: "+33 6 00 00 00 00",
   zone: "Basé en France — véhicules livrés partout en France",
 
-  // ▼▼▼ IDENTIFIANT FORMSPREE ▼▼▼
+  // ▼▼▼ DOSSIER DES DEMANDES (Supabase) ▼▼▼
+  // Les demandes des visiteurs (accueil, inventaire, contact) sont rangées
+  // dans votre dossier « Demandes » de l'espace propriétaire.
+  // Voir le README, rubrique « Dossier des demandes », pour l'installation.
+  // La clé publique est faite pour être visible : elle permet seulement
+  // de déposer une demande, jamais de les lire.
+  supabase: {
+    url: "VOTRE_URL_SUPABASE",           // ex. "https://abcdefghijkl.supabase.co"
+    clePublique: "VOTRE_CLE_PUBLIQUE",   // « Publishable key » (sb_publishable_…) ou « anon key »
+  },
+
+  // ▼▼▼ IDENTIFIANT FORMSPREE (facultatif : copie des demandes par e-mail) ▼▼▼
   // 1. Créez un formulaire sur https://formspree.io
   // 2. Copiez l'identifiant de 8 caractères (ex. : "xyzabcde")
   //    visible dans l'adresse https://formspree.io/f/xyzabcde

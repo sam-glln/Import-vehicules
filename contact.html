@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#0a0a0a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -45,8 +45,8 @@
           <p class="vehicle-notice" id="vehicle-notice" hidden>Demande concernant : <strong></strong></p>
 
           <!--
-            ENVOI DU FORMULAIRE : Formspree
-            L'identifiant Formspree se règle dans js/config.js (champ formspreeId).
+            ENVOI DU FORMULAIRE : les demandes arrivent dans votre dossier « Demandes »
+            (Supabase) et, si configuré, par e-mail via Formspree. Réglages : js/config.js.
           -->
           <form id="contact-form" method="POST" novalidate>
             <input type="hidden" name="_subject" value="Nouvelle demande depuis le site">
@@ -106,6 +106,7 @@
 
   <script src="js/config.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/demandes.js"></script>
   <script src="js/contact.js"></script>
 </body>
 </html>

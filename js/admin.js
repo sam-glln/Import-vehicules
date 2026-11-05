@@ -243,11 +243,36 @@
       else if (el.dataset.wasDisabled !== undefined) { el.disabled = el.dataset.wasDisabled === "1"; delete el.dataset.wasDisabled; }
     });
   }
+  // ---------- Rubriques : Inventaire / Demandes ----------
+  var currentTab = tabFromHash();
+  var invView = "login";
+  function tabFromHash() { return location.hash === "#demandes" ? "demandes" : "inventaire"; }
+
   function show(name) {
-    Object.keys(views).forEach(function (k) { views[k].hidden = k !== name; });
-    $("logout").hidden = name === "login";
+    invView = name;
+    applyTab();
     window.scrollTo(0, 0);
   }
+  function applyTab() {
+    var inv = currentTab === "inventaire";
+    Object.keys(views).forEach(function (k) { views[k].hidden = !inv || k !== invView; });
+    $("demandes-view").hidden = inv;
+    document.querySelectorAll("[data-tab]").forEach(function (a) {
+      if (a.dataset.tab === currentTab) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    updateLogout();
+    if (!inv && window.AdminDemandes) window.AdminDemandes.open();
+  }
+  function updateLogout() {
+    var sb = window.AdminDemandes && window.AdminDemandes.loggedIn();
+    $("logout").hidden = !(state.token || sb);
+  }
+  window.addEventListener("hashchange", function () {
+    currentTab = tabFromHash();
+    applyTab();
+    window.scrollTo(0, 0);
+  });
 
   // Exécute une publication avec indicateur de chargement et message final.
   function run(label, task, success) {
@@ -299,6 +324,7 @@
   }
 
   function logout() {
+    if (window.AdminDemandes) window.AdminDemandes.logout();
     clearToken();
     state.token = null;
     state.vehicles = [];
@@ -643,6 +669,12 @@
     }
   });
 
-  var saved = loadToken();
-  if (saved) login(saved); else show("login");
+  // Outils partagés avec js/admin-demandes.js
+  window.AdminCore = { toast: toast, setBusy: setBusy, esc: esc, updateLogout: updateLogout, isBusy: function () { return state.busy; } };
+
+  // Démarrage une fois tous les scripts chargés
+  document.addEventListener("DOMContentLoaded", function () {
+    var saved = loadToken();
+    if (saved) login(saved); else show("login");
+  });
 })();

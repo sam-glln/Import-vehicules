@@ -204,16 +204,58 @@
       if (mq.matches) setMenu(false);
     });
 
+    // L'en-tête s'efface quand on descend et revient dès qu'on remonte.
+    var lastY = window.scrollY;
     function onScroll() {
-      header.classList.toggle("scrolled", window.scrollY > 24);
+      var y = window.scrollY;
+      header.classList.toggle("scrolled", y > 24);
+      var busy = header.classList.contains("menu-open") || header.querySelector(".has-sub.open");
+      if (!busy) {
+        if (y > lastY + 6 && y > 160) header.classList.add("is-hidden");
+        else if (y < lastY - 6 || y < 160) header.classList.remove("is-hidden");
+      }
+      lastY = y;
     }
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  // Apparition douce des éléments marqués .reveal
+  // Titres découpés en mots qui montent l'un après l'autre (effet « rideau »).
+  var SPLIT_SELECTOR = ".page-hero h1, .section-title, .cta-band h2, .callout h2, .ride-intro h1, [data-split]";
+  function splitWords(el) {
+    if (el.dataset.splitDone) return;
+    el.dataset.splitDone = "1";
+    var i = 0;
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+        if (child.nodeType === 3) {
+          var parts = child.textContent.split(/(\s+)/);
+          var frag = document.createDocumentFragment();
+          parts.forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+            var outer = document.createElement("span");
+            outer.className = "w";
+            var inner = document.createElement("span");
+            inner.className = "wi";
+            inner.style.setProperty("--i", i++);
+            inner.textContent = part;
+            outer.appendChild(inner);
+            frag.appendChild(outer);
+          });
+          child.parentNode.replaceChild(frag, child);
+        } else if (child.nodeType === 1 && child.tagName !== "BR") {
+          walk(child);
+        }
+      });
+    })(el);
+    el.classList.add("reveal-text");
+  }
+
+  // Apparition douce des éléments marqués .reveal / .reveal-text / .reveal-img
   function setupReveal() {
-    var els = document.querySelectorAll(".reveal");
+    document.querySelectorAll(SPLIT_SELECTOR).forEach(splitWords);
+    var els = document.querySelectorAll(".reveal, .reveal-text, .reveal-img");
     if (!("IntersectionObserver" in window)) {
       els.forEach(function (el) { el.classList.add("is-visible"); });
       return;
@@ -230,7 +272,8 @@
   }
   window.observeReveal = function (root) {
     // Utilisé par l'inventaire après chargement dynamique.
-    (root || document).querySelectorAll(".reveal:not(.is-visible)").forEach(function (el) {
+    (root || document).querySelectorAll("[data-split]").forEach(splitWords);
+    (root || document).querySelectorAll(".reveal:not(.is-visible), .reveal-text:not(.is-visible), .reveal-img:not(.is-visible)").forEach(function (el) {
       if (!("IntersectionObserver" in window)) return el.classList.add("is-visible");
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {

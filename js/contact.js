@@ -1,4 +1,4 @@
-/* Formulaire de contact : pré-remplissage depuis l'inventaire et envoi via Formspree. */
+/* Formulaire de contact : pré-remplissage depuis l'inventaire et envoi (js/demandes.js). */
 (function () {
   "use strict";
 
@@ -11,8 +11,6 @@
   var refInput = form.querySelector("#reference");
   var notice = document.getElementById("vehicle-notice");
 
-  var configured = SITE.formspreeId && SITE.formspreeId !== "VOTRE_ID_FORMSPREE";
-  form.action = "https://formspree.io/f/" + (SITE.formspreeId || "");
 
   // ---------- Pré-remplissage ----------
   var params = new URLSearchParams(location.search);
@@ -56,28 +54,29 @@
       if (firstInvalid) firstInvalid.focus();
       return;
     }
-    if (!configured) {
-      setStatus("error", "Le formulaire n'est pas encore configuré : ajoutez votre identifiant Formspree dans js/config.js.");
-      return;
-    }
-
+    var fd = new FormData(form);
     submitBtn.disabled = true;
     submitBtn.textContent = "Envoi en cours…";
 
-    fetch(form.action, {
-      method: "POST",
-      body: new FormData(form),
-      headers: { Accept: "application/json" },
+    window.Demandes.envoyer({
+      source: "contact",
+      nom: fd.get("nom"),
+      email: fd.get("email"),
+      telephone: fd.get("telephone"),
+      vehicule_ref: fd.get("reference"),
+      vehicule: fd.get("vehicule"),
+      budget: fd.get("budget"),
+      message: fd.get("message"),
+      _gotcha: fd.get("_gotcha"),
     })
-      .then(function (r) {
-        if (!r.ok) throw new Error(r.status);
+      .then(function () {
         form.reset();
         form.classList.remove("was-validated");
         notice.hidden = true;
         setStatus("success", "Merci, votre message a bien été envoyé. Nous vous répondons sous 48 heures ouvrées.");
       })
-      .catch(function () {
-        setStatus("error", "L'envoi a échoué. Réessayez dans un instant ou écrivez-nous directement à " + (SITE.email || "notre adresse e-mail") + ".");
+      .catch(function (err) {
+        setStatus("error", window.Demandes.messageErreur(err));
       })
       .finally(function () {
         submitBtn.disabled = false;

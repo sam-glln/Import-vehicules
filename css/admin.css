@@ -198,3 +198,71 @@
 }
 .toast.error { border-left-color: #c25b5b; }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* ---------- Rubriques ---------- */
+.admin-tabs { display: flex; gap: 1.4rem; }
+.admin-tabs a {
+  position: relative; padding: 0.4rem 0;
+  font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+  transition: color 0.3s;
+}
+.admin-tabs a:hover { color: var(--text); }
+.admin-tabs a[aria-current="page"] { color: var(--text); }
+.admin-tabs a[aria-current="page"]::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--accent);
+}
+.tab-count {
+  display: inline-grid; place-items: center;
+  min-width: 18px; height: 18px; padding: 0 5px; margin-left: 0.3rem;
+  border-radius: 9px; background: var(--accent); color: #0a0a0a;
+  font-size: 0.64rem; letter-spacing: 0; font-weight: 500;
+}
+@media (max-width: 699px) {
+  .admin-tag { display: none; }
+  .admin-tabs { order: 3; width: 100%; padding-bottom: 0.4rem; }
+}
+
+/* ---------- Demandes ---------- */
+.req-filters { margin: 1.4rem 0 2rem; }
+.req-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+.req-item {
+  padding: clamp(1.1rem, 3vw, 1.8rem);
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--line-strong);
+}
+.req-item.statut-nouvelle { border-left-color: var(--accent); }
+.req-item.statut-traitee, .req-item.statut-archivee { opacity: 0.78; }
+.req-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin-bottom: 0.9rem; }
+.req-date { color: var(--faint); font-size: 0.8rem; }
+.req-source {
+  font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+  padding: 0.2rem 0.5rem; border: 1px solid var(--line);
+}
+.req-status { margin-left: auto; width: auto; }
+.req-status select { width: auto; min-width: 150px; }
+.req-name { font-family: var(--font-serif); font-size: 1.6rem; line-height: 1.2; margin: 0 0 0.5rem; }
+.req-contact { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin-bottom: 1rem; font-size: 0.92rem; }
+.req-contact a { border-bottom: 1px solid var(--line-strong); }
+.req-contact a:hover { color: var(--accent); border-color: var(--accent); }
+.req-vehicle { margin: 0 0 0.4rem; font-size: 0.92rem; }
+.req-vehicle .lbl {
+  display: inline-block; min-width: 5.5rem;
+  font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint);
+}
+.req-vehicle a:hover { color: var(--accent); }
+.req-message {
+  white-space: pre-wrap; color: var(--muted);
+  margin: 1rem 0 0; padding-top: 1rem; border-top: 1px solid var(--line);
+}
+.req-notes { margin-top: 1rem; font-size: 0.9rem; }
+.req-notes summary { cursor: pointer; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; }
+.req-notes summary:hover { color: var(--text); }
+.req-notes textarea {
+  display: block; width: 100%; margin: 0.8rem 0 0.4rem;
+  background: var(--bg); color: var(--text);
+  border: 1px solid var(--line); border-radius: 0;
+  padding: 0.7rem; font: inherit; font-size: 1rem; resize: vertical;
+}
+.req-notes textarea:focus { outline: none; border-color: var(--accent); }
+.req-actions { display: flex; justify-content: flex-end; margin-top: 0.6rem; }

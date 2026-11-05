@@ -8,26 +8,122 @@
   <meta name="theme-color" content="#0a0a0a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <!-- Pour changer la photo d'accueil : remplacez assets/img/hero.jpg (format paysage, 1600 px de large conseillé) -->
-  <link rel="preload" as="image" href="assets/img/hero.jpg">
+  <!--
+    PHOTOS DE L'ACCUEIL
+    - assets/img/accueil-exterieur.jpg : la voiture vue de l'extérieur (paysage)
+    - assets/img/accueil-interieur.jpg : l'habitacle de la voiture
+    Pour changer le point vers lequel on « plonge » dans la voiture, modifiez
+    data-focus="60% 34%" ci-dessous (position horizontale puis verticale de l'habitacle sur la photo).
+  -->
+  <link rel="preload" as="image" href="assets/img/accueil-exterieur.jpg">
 </head>
 <body class="page-home">
 
   <main id="contenu">
-    <section class="hero">
-      <div class="hero-media" style="background-image: url('assets/img/hero.jpg');" role="img" aria-label="Pick-up Chevrolet de 1949 restauré"></div>
-      <div class="container hero-content hero-anim">
-        <span class="eyebrow">Canada &amp; États-Unis → France</span>
-        <h1>Importation de véhicules <em>nord-américains</em></h1>
-        <p>Du premier repérage à la carte grise française, nous trouvons, achetons et importons pour vous le véhicule américain ou canadien que vous cherchez.</p>
-        <div><a class="btn btn-solid" href="contact.html">Nous contacter</a></div>
+    <section class="ride" id="ride" aria-label="Accueil">
+      <div class="ride-stage">
+        <img class="ride-layer ride-exterior" src="assets/img/accueil-exterieur.jpg" alt="Ford Thunderbird cabriolet de 1962" data-focus="60% 34%">
+        <img class="ride-layer ride-interior" src="assets/img/accueil-interieur.jpg" alt="Habitacle de la Ford Thunderbird 1962 : volant rouge et tableau de bord chromé" loading="eager">
+        <div class="ride-shade"></div>
+
+        <!-- 1. Vue extérieure -->
+        <div class="ride-intro">
+          <div class="container hero-anim">
+            <span class="eyebrow">Canada &amp; États-Unis → France</span>
+            <h1>Importation de véhicules <em>nord-américains</em></h1>
+            <p>Du premier repérage à la carte grise française, nous trouvons, achetons et importons pour vous le véhicule américain ou canadien que vous cherchez.</p>
+            <div><a class="btn btn-solid" href="#a-bord" data-ride-jump>Nous contacter</a></div>
+          </div>
+          <a class="ride-hint" href="#a-bord" data-ride-jump>
+            <span>Faites défiler pour monter à bord</span>
+            <i aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <!-- 2. À bord : informations de contact -->
+        <div class="ride-cabin" id="a-bord">
+          <div class="cabin-card">
+            <div class="cabin-info">
+              <span class="eyebrow">Bienvenue à bord</span>
+              <h2>Prenez place, <br><em>parlons de votre projet.</em></h2>
+              <p>Dites-nous quel véhicule vous fait rêver&nbsp;: nous vous recontactons sous 48&nbsp;heures avec une première estimation.</p>
+              <ul class="cabin-lines">
+                <li><span class="lbl">Téléphone</span><a data-site="telephone" href="tel:+33600000000">+33 6 00 00 00 00</a></li>
+                <li><span class="lbl">E-mail</span><a data-site="email" href="mailto:contact@exemple.fr">contact@exemple.fr</a></li>
+              </ul>
+              <div class="social-block cabin-social">
+                <ul class="social-list" data-social></ul>
+              </div>
+            </div>
+
+            <form class="cabin-form" id="cabin-form" novalidate>
+              <div class="hp" aria-hidden="true"><label>Ne pas remplir <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+              <div class="field"><label for="c-nom">Nom</label><input id="c-nom" name="nom" autocomplete="name" required></div>
+              <div class="field"><label for="c-email">E-mail</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="c-tel">Téléphone <span class="opt">(facultatif)</span></label><input id="c-tel" name="telephone" type="tel" autocomplete="tel"></div>
+              <div class="field"><label for="c-msg">Véhicule recherché, budget, questions…</label><textarea id="c-msg" name="message" rows="3" required></textarea></div>
+              <label class="consent">
+                <input type="checkbox" name="consentement" required>
+                <span>J'accepte que mes données servent uniquement à répondre à ma demande (<a href="mentions-legales.html">mentions légales</a>).</span>
+              </label>
+              <button class="btn btn-solid" type="submit">Envoyer</button>
+              <p class="form-status" role="status" hidden></p>
+            </form>
+          </div>
+        </div>
+
+        <div class="ride-progress" aria-hidden="true"><span></span></div>
       </div>
+    </section>
+
+    <!-- ================= LA COLLECTION (carrousel alimenté par vehicles.json) ================= -->
+    <section class="showcase" aria-labelledby="collection-title">
+      <div class="container showcase-head">
+        <div>
+          <span class="eyebrow">Inventaire</span>
+          <h2 class="display" id="collection-title" data-split>La collection</h2>
+          <p class="reveal">Des véhicules inspectés en Amérique du Nord, prix rendus France.</p>
+        </div>
+        <div class="showcase-nav">
+          <button class="round-btn" type="button" id="show-prev" aria-label="Véhicules précédents">←</button>
+          <button class="round-btn" type="button" id="show-next" aria-label="Véhicules suivants">→</button>
+        </div>
+      </div>
+      <div class="showcase-track" id="showcase-track" tabindex="0" aria-label="Véhicules disponibles"></div>
+      <div class="container showcase-foot">
+        <div class="showcase-progress" aria-hidden="true"><span id="show-progress"></span></div>
+        <a class="link-arrow" href="inventaire.html">Tout l'inventaire</a>
+      </div>
+    </section>
+
+    <!-- ================= DEUX ROUTES D'IMPORT ================= -->
+    <section class="routes" aria-label="Importer un véhicule">
+      <a class="route reveal-img" href="import-canada.html">
+        <img src="assets/img/vehicules/mustang-1967-2.jpg" alt="" loading="lazy">
+        <div class="route-body">
+          <span class="eyebrow">Importer</span>
+          <h3>Du Canada</h3>
+          <p>Halifax, Montréal, Le Havre&nbsp;: un parcours balisé, et des droits de douane réduits pour les véhicules d'origine canadienne.</p>
+          <span class="link-arrow">Découvrir</span>
+        </div>
+      </a>
+      <a class="route reveal-img" href="import-etats-unis.html" style="--delay: 150ms">
+        <img src="assets/img/vehicules/corvette-1963-3.jpg" alt="" loading="lazy">
+        <div class="route-body">
+          <span class="eyebrow">Importer</span>
+          <h3>Des États-Unis</h3>
+          <p>Title, déclaration d'export, ports de la côte Est ou Ouest&nbsp;: nous gérons chaque formalité.</p>
+          <span class="link-arrow">Découvrir</span>
+        </div>
+      </a>
     </section>
   </main>
 
   <script src="js/config.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/demandes.js"></script>
+  <script src="js/accueil.js"></script>
 </body>
 </html>

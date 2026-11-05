@@ -57,6 +57,7 @@
       '<h2 class="vehicle-model">' + esc(v.modele) + "</h2>" +
       '<p class="vehicle-meta"><span>' + esc(v.annee) + "</span><span>" + km(v.kilometrage) + "</span></p>" +
       '<p class="vehicle-price"><span class="price-label">Prix rendu France</span>' + prix(v.prix) + "</p>" +
+      '<span class="link-arrow">Découvrir</span>' +
       "</div></a></article>"
     );
   }
@@ -116,10 +117,33 @@
       specs.push([k, v.caracteristiques[k]]);
     });
 
-    var cta = st === "vendu"
-      ? '<p class="sold-note">Ce véhicule est vendu. Nous pouvons rechercher un modèle équivalent pour vous.</p>' +
-        '<a class="btn" href="contact.html?vehicule=' + encodeURIComponent(v.id) + '&recherche=1">Rechercher un modèle similaire</a>'
-      : '<a class="btn btn-solid" href="contact.html?vehicule=' + encodeURIComponent(v.id) + '">Je suis intéressé</a>';
+    var vendu = st === "vendu";
+    var label = titre(v) + " " + v.annee + " (réf. " + v.id.toUpperCase() + ")";
+    var cta = (vendu ? '<p class="sold-note">Ce véhicule est vendu. Nous pouvons rechercher un modèle équivalent pour vous.</p>' : "") +
+      '<button class="btn btn-solid" type="button" data-open-request>' +
+      (vendu ? "Rechercher un modèle similaire" : "Faire une demande d'information") + "</button>";
+
+    var defaultMsg = vendu
+      ? "Bonjour,\n\nJe recherche un véhicule similaire à celui-ci : " + label + ".\n\nMerci."
+      : "Bonjour,\n\nJe souhaite recevoir plus d'informations sur ce véhicule : " + label + ".\n\nMerci.";
+
+    var requestForm =
+      '<section class="info-request" id="info-request" hidden>' +
+      "<h3>" + (vendu ? "Rechercher un modèle similaire" : "Demande d'information") + "</h3>" +
+      "<p>" + esc(label) + " — nous vous répondons sous 48 heures.</p>" +
+      '<form novalidate>' +
+      '<div class="hp" aria-hidden="true"><label>Ne pas remplir <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>' +
+      '<div class="field"><label for="r-nom">Nom</label><input id="r-nom" name="nom" autocomplete="name" required></div>' +
+      '<div class="form-row">' +
+      '<div class="field"><label for="r-email">E-mail</label><input id="r-email" name="email" type="email" autocomplete="email" required></div>' +
+      '<div class="field"><label for="r-tel">Téléphone <span class="opt">(facultatif)</span></label><input id="r-tel" name="telephone" type="tel" autocomplete="tel"></div>' +
+      "</div>" +
+      '<div class="field"><label for="r-msg">Message</label><textarea id="r-msg" name="message" rows="4" required>' + esc(defaultMsg) + "</textarea></div>" +
+      '<label class="consent"><input type="checkbox" name="consentement" required><span>J\'accepte que mes données servent uniquement à répondre à ma demande (<a href="mentions-legales.html">mentions légales</a>).</span></label>' +
+      '<div class="form-actions"><button class="btn btn-solid" type="submit">Envoyer la demande</button>' +
+      '<button class="link-btn" type="button" data-close-request>Annuler</button></div>' +
+      '<p class="form-status" role="status" hidden></p>' +
+      "</form></section>";
 
     dialogBody.innerHTML =
       '<div class="detail">' +
@@ -150,6 +174,7 @@
       specs.map(function (s) { return "<div><dt>" + esc(s[0]) + "</dt><dd>" + esc(s[1]) + "</dd></div>"; }).join("") +
       "</dl>" +
       '<div class="detail-cta">' + cta + "</div>" +
+      requestForm +
       '<p class="ref">Réf. ' + esc(v.id.toUpperCase()) + "</p>" +
       "</div></div>";
 
@@ -172,12 +197,69 @@
       startX = null;
     });
 
+    setupRequest(v, label, vendu);
+
     showPhoto(0);
     if (!dialog.open) {
       dialog.showModal();
       document.body.classList.add("no-scroll");
     }
     dialog.scrollTop = 0;
+  }
+
+  // ---------- Demande d'information depuis la fiche ----------
+  function setupRequest(v, label, vendu) {
+    var section = dialogBody.querySelector("#info-request");
+    var ctaBox = dialogBody.querySelector(".detail-cta");
+    var form = section.querySelector("form");
+    var status = form.querySelector(".form-status");
+    var btn = form.querySelector("button[type=submit]");
+
+    dialogBody.querySelector("[data-open-request]").addEventListener("click", function () {
+      ctaBox.hidden = true;
+      section.hidden = false;
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(function () { form.querySelector("#r-nom").focus({ preventScroll: true }); }, 350);
+    });
+    section.querySelector("[data-close-request]").addEventListener("click", function () {
+      section.hidden = true;
+      ctaBox.hidden = false;
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.classList.add("was-validated");
+        var bad = form.querySelector(":invalid");
+        if (bad) bad.focus();
+        return;
+      }
+      var fd = new FormData(form);
+      btn.disabled = true;
+      btn.textContent = "Envoi…";
+      status.hidden = true;
+      window.Demandes.envoyer({
+        source: "inventaire",
+        nom: fd.get("nom"),
+        email: fd.get("email"),
+        telephone: fd.get("telephone"),
+        vehicule_ref: v.id.toUpperCase(),
+        vehicule: (vendu ? "Similaire à : " : "") + titre(v) + " " + v.annee,
+        message: fd.get("message"),
+        _gotcha: fd.get("_gotcha"),
+      }).then(function () {
+        form.querySelectorAll(".field, .form-row, .consent, .form-actions").forEach(function (el) { el.hidden = true; });
+        status.className = "form-status success";
+        status.textContent = "Merci, votre demande concernant ce véhicule est bien arrivée. Nous vous recontactons sous 48 heures.";
+        status.hidden = false;
+      }).catch(function (err) {
+        status.className = "form-status error";
+        status.textContent = window.Demandes.messageErreur(err);
+        status.hidden = false;
+        btn.disabled = false;
+        btn.textContent = "Envoyer la demande";
+      });
+    });
   }
 
   function closeDialog() {
@@ -194,6 +276,7 @@
   });
   dialog.addEventListener("keydown", function (e) {
     if (gallery.list.length < 2) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return; // pas pendant la saisie
     if (e.key === "ArrowLeft") showPhoto(gallery.index - 1);
     if (e.key === "ArrowRight") showPhoto(gallery.index + 1);
   });
